@@ -1,0 +1,188 @@
+<div id="content" class="grid-10">
+    <section>
+        <div class="block-header">Интернет-магазин</div>
+        <div id="bread-crumbs"><? echo $PAGE->getBreadCrumbs(); ?></div>
+    </section>
+    <section class="shop">                        
+        <section id="goods" class="product-card">
+            <h1>_Флисовый спальный мешок - вкладыш - плед</h1>
+            <section class="product">
+                <div class="product-img"><img alt="" src="/uploads/shop/goods/1_m.jpg"/></div>
+                <div class="product-description">                                    
+                    <p class="product-characteristic">флис 200 гр/кв.м | разъемная молния | 75 х 200 см | вес 750 гр</p>
+                    <p class="product-manufacturer">производитель: <a href="#">ПИК-99</a></p>
+                    <p class="product-announcement">его можно использовать и как вкладыш | и как флисовый спальник | и как плед для пассажира в машине, для ночевки в аэропорту или .</p>
+
+                    <div class="grid-row product-order"> 
+                        <div class="grid-3">
+                            <div class="product-price">
+                                <div class="product-old-price">1 150 <span>руб.</span></div>
+                                <div class="product-new-price">900 <span>руб.</span></div>
+                                <!--<div>1 190 <span>руб</span></div>-->                                    
+                            </div>  
+                        </div>
+                        <form>
+                            <div class="grid-3">
+                                <div class="form-group">
+                                    <select>                                               
+                                        <option selected="selected">Выберите</option>
+                                        <option>S</option>
+                                        <option>M</option>
+                                        <option>L</option>
+                                        <option>XL</option>
+                                    </select>
+                                    <i class="bar"></i>
+                                </div> 
+                            </div>                                                                               
+                        </form>
+                        <div class="grid-6">
+                            <a href="#" class="button">купить</a>
+                            <a href="#" class="button-gray">заказ в 1 клик</a>
+                        </div>
+                    </div> 
+                    <div class="product-link">
+                        <a href="#">Камеры R15 почти закончились. Распродаем оболочки с большой скидкой >></a>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </section>                            
+        </section>
+        <section id="advantages">
+            <h2>Почему мы?</h2>
+            <ul>
+                <li>
+                    <a href="#"><img alt="" src="/uploads/shop/advantages/1.png"></a>
+                    <a href="#">Собственное производство ПИК-99 >></a>
+                </li>
+                <li>
+                    <a href="#"><img alt="" src="/uploads/shop/advantages/2.png"></a>
+                    <a href="#">Гарантия 2 года - на ПИК-99 >></a>
+                </li>
+                <li>
+                    <a href="#"><img alt="" src="/uploads/shop/advantages/3.png"></a>
+                    <a href="#">Гарантия 1 год - на остальное >></a>
+                </li>
+                <li>
+                    <a href="#"><img alt="" src="/uploads/shop/advantages/4.png"></a>
+                    <a href="#">Вернуть товар? О'К! 180 дней >></a>
+                </li>
+                <li>
+                    <a href="#"><img alt="" src="/uploads/shop/advantages/5.png"></a>
+                    <a href="#">Реальные отзывы покупателей >></a>
+                </li>
+            </ul>
+        </section>
+    </section> 
+    <section class="border-bottom">  
+        <p>УЮТ-2К - летний спальный мешок на не очень крупного владельца (или на владелицу :). Он очень компактный и легкий и хорошо подходит для летней погоды. Но ранней весной и поздней осенью в нем будет прохладно, для таких случаев лучше выбрать УЮТ-3К.</p>
+        <p><strong>Характеристики спального мешка:</strong></p>
+        <ul>
+            <li>t нижняя граница комфорта = 0°С</li>
+            <li>t экстрима = -5°С</li>
+            <li>вес 1.1 кг</li>
+            <li>размер в упаковке Ø20 х 36 см (11л)</li>
+            <li>размер в сжатом виде Ø20 х 20 см (6л)</li>
+        </ul> 
+        <table>
+            <tr>
+                <td>
+                    <img src="/uploads/content/1.gif" style="width: 320px;"/>
+                </td>
+                <td>
+                    <img src="/uploads/content/2.jpg"/>
+                </td>
+                <td>
+                    <img src="/uploads/content/3.jpg"/>
+                </td>
+            </tr>
+        </table>     
+        <p><strong>Особенности конструкции:</strong></p>
+        <ul>
+            <li>капюшон объемного покроя;</li>
+            <li>уплотнительная планка по молнии препятствует проникновению холодного воздуха;</li>
+            <li>правый и левый спальники можно состегнуть в "спарку" - так будет теплее ночевать;</li>
+            <li>застежка-липучка фиксирует молнию в застегнутом состоянии;</li>
+            <li>вдоль молнии пришита стропа от закусывания;</li>
+        </ul> 
+        <table class="gallery">
+            <tr>
+                <td>
+                    <img src="/uploads/content/t-1.jpg"/>
+                    <div>Объемный капюшон лучше<br>сохраняет тепло</div>
+                </td>
+                <td>
+                    <img src="/uploads/content/t-2.jpg"/>
+                    <div>Уплотнительная планка<br>вдоль молнии</div>
+                </td>
+                <td>
+                    <img src="/uploads/content/t-3.jpg"/>
+                    <div>Стропа от закусывания</div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <img src="/uploads/content/t-4.jpg" />
+                    <div>Объемный капюшон лучше<br>сохраняет тепло</div>
+                </td>
+                <td>
+                    <img src="/uploads/content/t-5.jpg"/>
+                    <div>Уплотнительная планка<br>вдоль молнии</div>
+                </td>
+                <td>
+                    <img src="/uploads/content/t-6.jpg"/>
+                    <div>Стропа от закусывания</div>
+                </td>
+            </tr>
+        </table> 
+        <div class="categories-links"><a href="#">Спальные мешки</a><span class="arrow">|</span><a href="#">Спальные мешки-кокон ПИК-99 УЮТ</a><span class="arrow">|</span><a href="#">Спальные мешки типа "кокон"</a></div>
+        <a href=""><< Назад</a>
+        <p class="shop-note italic"><i>****ВАЖНО: Расцветка имеющихся на складе изделий (как снаряжения, так и одежды) может отличаться от представленной на фотографиях на сайте. Если вас интересует конкретная расцветка - просим указывать это при оформлении Заказа в поле "Комментарий к заказу" или уточнять при переписке с менеджером Интернет-магазина. ****</i></p>
+    </section>
+    <section class="shop">
+        <h3>Рекомендуем также приобрести</h3>
+        <section id="goods">                            
+            <section class="product">
+                <div class="product-img"><img alt="" src="/uploads/shop/goods/1.jpg"/></div>
+                <div class="product-description">
+                    <a href="#" class="product-name">_Флисовый спальный мешок - вкладыш - плед</a>
+                    <p class="product-characteristic">флис 200 гр/кв.м | разъемная молния | 75 х 200 см | вес 750 гр</p>
+                    <p class="product-manufacturer">производитель: <a href="#">ПИК-99</a></p>
+                    <p class="product-announcement">его можно использовать и как вкладыш | и как флисовый спальник | и как плед для пассажира в машине, для ночевки в аэропорту или .</p>
+                    <a href="#">подробнее>></a>
+                </div>
+                <div class="product-price">
+                    <div class="product-old-price">1 150 <span>руб.</span></div>
+                    <div class="product-new-price">900 <span>руб.</span></div>
+                    <!--<div>1 190 <span>руб</span></div>-->
+                    <a href="#" class="button">купить</a>
+                    <form>
+                        <div class="form-group">
+                            <select>                                               
+                                <option selected="selected">Выберите</option>
+                                <option>S</option>
+                                <option>M</option>
+                                <option>L</option>
+                                <option>XL</option>
+                            </select>
+                            <i class="bar"></i>
+                        </div>                                         
+                    </form>
+                </div>
+            </section>
+            <section class="product">
+                <div class="product-img"><img alt="" src="/uploads/shop/goods/2.jpg"/></div>
+                <div class="product-description">
+                    <a href="#" class="product-name">Детский спальный мешок ПИК-99 ПИКколо-2</a>
+                    <p class="product-characteristic">утеплитель - Синтетический пух (2х-слойный) | подкладка - 100% хлопок, ситец | тип "одеяло с капюшоном" | рекомендуются для детей ростом до 135 см</p>
+                    <p class="product-manufacturer">производитель: <a href="#">ПИК-99</a></p>
+                    <p class="product-announcement">Вес ≈ 1.05 кг. Температура +7...+10°С и выше. Размер (140+30) х 67 см. Размер упаковки Ø21 х 25 см</p>
+                    <a href="#">подробнее>></a>
+                </div>
+                <div class="product-price">                                    
+                    <div>1 190 <span>руб</span></div>
+                    <a href="#" class="button-gray">увы, <br>закончились</a>
+                </div>
+            </section>
+        </section>                        
+    </section>
+</div>

@@ -1,0 +1,167 @@
+<?php
+/* 
+* Функция выбора виртуального номера
+* Function select virtual number
+* @param string $Id 
+* @return xajaxResponse 
+*/ 
+function Select_Mobile_Number($Id)
+{
+    $objResponse = new xajaxResponse();
+    include_once AS_ROOT .'libs/check/check_virtual_number.php';
+    if($errors==0){
+    $step_2_form = "
+        <div class='col-md-12 arrow_box arrow_center c-body' >
+        <form class='form-horizontal' id='FormInputNumber' action='javascript:void(null);' onsubmit='_paq.push([\"trackEvent\",\"Demo\",\"Submit\",\"PhoneForm\",JSON.stringify({\"phone\":document.getElementById(\"client-phone\").value})])'>
+            <input type='hidden' name='virtual-number' id='virtual-number' value='".$Id['virtual-number']."'>
+            <div class='form-group'>
+                    <label class='col-md-12'>Номер Вашего мобильного телефона</label>
+                    <div class='col-md-6'>
+                        <div class='input-group c-square input-group-lg'>
+                            <span id='sizing-addon1' class='input-group-addon'><i class='fa fa-mobile'></i></span>
+                            <input type='text' aria-describedby='sizing-addon1'  id='client-phone' name='client-phone' placeholder='+7(___)___-__-__'  class='form-control  c-square c-theme'>                            
+                        </div>
+                        <div id='form-error-client-phone' class='c-font-red'></div>
+                    </div>                    
+                    <div class='col-md-6 help-block'>
+                        Введите номер своего мобильного телефона. На него будет установлена переадресация с номера <strong>".$Id['virtual-number']."</strong>.
+                    </div>
+            </div>
+            <div class='form-group'>
+                    <label class='col-md-12'>e-mail:</label>
+                    <div class='col-md-6'>
+                        <div class='input-group c-square input-group-lg'>
+                            <span id='sizing-addon1' class='input-group-addon'><i class='fa fa-at'></i></span>
+                            <input type='text' aria-describedby='sizing-addon1' name='client-mail' placeholder='mail@example.com' class='form-control  c-square c-theme'>
+                        </div>
+                        <div id='form_error_client_mail' class='c-font-red'></div>
+                    </div>
+                    <div class='col-md-6 help-block'>
+                        Укажите e-mail, на который будут отправляться уведомления о подключении виртуального номера и пропущенных вызовах, аудиозаписи принятых звонков.
+                    </div>
+            </div>
+            <div class='c-center'>
+                <input type='submit' name='send_form' id='go_to_step_3' class='btn c-theme-btn c-btn-square c-btn-uppercase c-btn-bold' value='Подтвердить номер' onclick='xajax_Input_Mobile_Number_Verification_Code(xajax.getFormValues(\"FormInputNumber\"));' />
+            </div>
+        </form>
+        </div>
+        ";
+        $objResponse->assign("virtual-number-block-replace","innerHTML", $step_2_form);
+        $objResponse->script("window.location.hash ='step_2'");
+        $objResponse->script("phoneMask('#client-phone');");
+        //$objResponse->call("phoneMask();");
+    }    
+    return $objResponse;
+}
+/* 
+* Функция выбора виртуального номера
+* Function select virtual number
+* @param string $Id 
+* @return xajaxResponse 
+*/ 
+function Input_Mobile_Number_Verification_Code($Id)
+{
+    $objResponse = new xajaxResponse();
+    include_once AS_ROOT .'libs/check/check_mobile_number.php';
+    if($errors==0){
+        include_once AS_ROOT .'libs/api_func.php';
+        $verification_id = requestMobilePhoneVerification($Id['client-phone']);
+        $step_3_form = "
+            <div class='col-md-12 arrow_box arrow_right c-body' >
+            <form class='form-horizontal' id='FormInputCode' action='javascript:void(null);'>                
+                <input type='hidden' name='verification_id' id='verification_id' value='".$verification_id."'>
+                <input type='hidden' name='virtual-number' id='virtual-number' value='".$Id['virtual-number']."'>
+                <input type='hidden' name='client-phone' id='client-phone' value='".$Id['client-phone']."'>
+                <input type='hidden' name='client-mail' id='client-mail' value='".$Id['client-mail']."'>
+                <div class='form-group'>
+                        <label class='col-md-12'>Код из смс</label>
+                        <div class='col-md-6'>
+                            <div class='input-group c-square input-group-lg'>
+                                <span id='sizing-addon1' class='input-group-addon'><i class='fa fa-envelope-o'></i></span>
+                                <input type='text' aria-describedby='sizing-addon1' name='verification_code' placeholder='****' class='form-control  c-square c-theme'>
+                            </div>
+                        </div>                    
+                        <div class='col-md-6 help-block'>
+                            Проверьте Ваш мобильный телефон, на него должно прийти СМС сообщение с кодом подтверждения. Введите код из SMS.
+                        </div>
+                </div>     
+                <div class='has-error' id='all-errors'></div>
+                <div class='c-center'>
+                    <input type='submit' name='send_form' id='go_to_finish' class='btn c-theme-btn c-btn-square c-btn-uppercase c-btn-bold' value='Подтвердить номер' onclick='xajax_Check_Mobile_Number(xajax.getFormValues(\"FormInputCode\"));' />
+                </div>
+            </form>
+            </div>
+            ";
+        $objResponse->assign("virtual-number-block-replace","innerHTML", $step_3_form); 
+        $objResponse->script("window.location.hash ='step_3'");
+    }    
+    return $objResponse;
+}
+/* 
+* Функция выбора виртуального номера
+* Function select virtual number
+* @param string $Id 
+* @return xajaxResponse 
+*/ 
+function Check_Mobile_Number($Id)
+{
+    $objResponse = new xajaxResponse();
+    include_once AS_ROOT .'libs/check/check_verification_code.php';
+    $msg="";
+    if($errors==0){
+        include_once AS_ROOT .'libs/api_func.php';
+        $result_status = checkMobilePhone($Id['verification_id'], $Id['verification_code']);
+        switch($result_status)  
+        {          
+            case 'passed':      
+                // код из смс совпал
+                $msg = "    
+                    <div class='col-md-12 c-border c-border-green c-body' >
+                    <div class='col-md-5'>			
+                        <img class='img-responsive' src='/assets/base/img/content/solutions/incoming-call.png'>
+                    </div>
+                    <div class='col-md-7'>	
+                        <div class='c-content-title-1'>
+                            <h3 class='c-font-uppercase c-font-bold c-left'>Спасибо за регистрацию!</h3>
+                        </div>                    	
+                        <p class='c-left'>
+                            Вы получили бесплатный тестовый период - 3 дня. Пожалуйста, не закрывайте это окно еще 15 секунд. 
+                        </p>
+                        <p class='c-left'>
+                            Проверьте свой мобильный - Вам звонят. 
+                        </p>
+                    </div>   
+                    </div>
+                ";
+                //sendVpbxsParams($Id['verification_id'], $Id['virtual-number'], $Id['client-phone'], $Id['client-mail']);
+                $json = sendVpbxsParams($Id['verification_id'], $Id['virtual-number'], $Id['client-phone'], $Id['client-mail']);
+                //dbg($json);
+                //echo $json;
+                include_once AS_ROOT .'libs/orders_func.php'; 
+                orderHandler('virtual_number_test', "", $Id['client-phone'], $Id['client-mail'], "Виртуальный номер ".$Id['virtual-number']); 
+                $objResponse->assign("virtual-number-block-replace","innerHTML", $msg); 
+                $objResponse->script("AnalyticsGoal.handler('virtual_number_test');");
+            break; 
+            case 'progressing':
+                // не верно указан код из смс
+                $msg = "            
+                    Код указан неверно. Попробуйте еще раз
+                "; 
+                $objResponse->assign("all-errors","innerHTML", $msg); 
+                
+            break;      
+            case 'failed':
+                // поптыки закончились
+                $msg = "            
+                    Код указан неверно. Количество попыток исчерпано
+                "; 
+                $objResponse->assign("all-errors","innerHTML", $msg); 
+            break;
+            default:  
+                return $objResponse;          
+            break;      
+        }
+        $objResponse->script("window.location.hash ='finish'");  
+    }    
+    return $objResponse;
+}

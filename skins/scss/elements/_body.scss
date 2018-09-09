@@ -1,0 +1,194 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 03.03.2018, 12:51:58
+    Author     : dulebsky
+*/
+* {
+  @include box-sizing(border-box);
+}
+*:before,
+*:after {
+  @include box-sizing(border-box);
+}
+html,
+body {
+  overflow-x: hidden !important; /* Prevent scroll on narrow devices */
+  font-size: 14px;
+}
+body {
+  margin: 0;
+  font-family: $font !important;  
+  font-weight: 300;  
+  line-height: 21px !important;
+  background-color: $bg-color;
+  color: $font-color;
+  .wrapper{
+      background-color: $white;
+      width: 998px;
+      margin: auto;
+      padding: 0px 30px;
+      #offer{
+          
+      }
+      #offer-mobile{
+          display: none;
+      }
+      aside{
+          padding: 20px 0px 20px 0px;
+          .left-menu{
+              margin-bottom:20px;
+              .button{
+                  width: 100%;
+              }
+            ul{                      
+                background-color: $bg-menu-color;
+                li{                
+                    list-style:none;
+                    position: relative;
+                    display: inline-block;  
+                    width: 100%;
+                    @include links(13px, $menu-link-color, $menu-link-color-hover);
+                    border-bottom: 1px solid $gray-lighten;
+                    padding:9px 20px 9px 10px; 
+                    line-height: 16px;                                   
+                    a{
+                        display: inline-block;
+                        width: 100%;
+                        font-weight: bold;
+                        &.dropdown{
+                            &:after{
+                                content: "";            
+                                width: 0px;
+                                height: 0px;
+                                border: 5px solid transparent;
+                                border-top-color: $menu-link-color;
+                                display: inline-block;  
+                                position: absolute;
+                                top: 15px;
+                                right: 10px;
+                            }                           
+                        }     
+                    } 
+                    ul.dropdownmenu{
+                        margin-top:10px;
+                        li{
+                            border-bottom: none;
+                            padding: 9px 0px 9px 15px;
+                            a{
+                                font-weight: 300;
+                            }
+                            &:after{
+                                content: '\2005\00BB'; 
+                                font-size: 13px;
+                                position: absolute;
+                                top: 5px;
+                                left: 0;
+                            }
+                        }
+                        
+                    }
+                }          
+                &:after{
+                    content: '';
+                    display: block;
+                    clear: both;
+                }
+            }
+          }
+          @include links(13px, $menu-link-color-hover, $menu-link-color-hover);
+          .block-header{
+              border-bottom: 1px solid $gray-light;
+              padding: 0px 0px 5px 0px;
+          }      
+      }
+      .content_wrapper{
+          padding: 20px 0px 20px 25px;
+          .block-header{
+              border-bottom: 1px solid $gray-light;
+              padding: 0px 0px 5px 0px;
+          }
+          
+          #bread-crumbs, .categories-links{
+              a{
+                  display: inline-block;
+                  @include links(12px, $menu-link-color-hover, $menu-link-color-hover);
+              }
+              span{
+                  display: inline-block;                  
+                  color: $font-actve-link-color;
+                  &.arrow{
+                      color:$menu-link-color-hover;
+                      margin: 0px 5px;
+                  }
+              }
+          }
+          .categories-links{
+              background-color: $bg-menu-color;
+              padding: 10px;
+          }
+          .shop-note{
+              font-size: $default-font-size - 2;
+          }
+      }      
+      h1,h2,h3,h4{
+          margin: 30px 0px 20px;
+      }
+      h2, h3{
+          font-size: 20px;
+          font-weight: bold;
+      }
+      p{
+          margin: 20px 0px;
+          &.italic{
+               font-style: italic;
+          }
+      }
+      em{
+          font-style: italic;
+      }
+      .border-bottom{
+          border-bottom: 1px solid $gray-light;
+      }
+      .news{
+          border-bottom: 1px solid $gray-light;
+          padding-bottom:10px;
+          h2{
+              span{
+                  font-size: 14px;
+                  display: inline-block;
+                  padding: 0px 0px 0px 10px;
+                  font-weight: 300;
+              }
+          }
+      }
+  }
+}
+@media screen and (max-width: 767px) {
+    body {        
+        .wrapper{            
+            width: 100%;
+            padding: 65px 0px 0px 0px;        
+            #offer{
+                display: none;
+            }
+            #offer-mobile{
+                display:block;
+                color: #0600fd;
+                padding: 20px;
+                text-align: center;
+                font-size: 30px;
+                line-height: 35px;
+                background: $blue;
+                @include background(linear-gradient(top, lighten($blue-lighten,20%), lighten($blue,10%)));
+                margin-bottom: 20px;
+            }
+            aside{
+                display: none;
+            }            
+        }
+    }
+}

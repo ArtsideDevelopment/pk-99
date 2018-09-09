@@ -1,0 +1,14 @@
+<?php
+require_once ("xajax_func/pages_func_xajax.php");
+$xajax->register(XAJAX_FUNCTION, "Add_New_Page");
+$xajax->register(XAJAX_FUNCTION, "Edit_Page");
+$xajax->register(XAJAX_FUNCTION, "Delete_Content");
+$xajax->register(XAJAX_FUNCTION, "Make_Active");
+$xajax->register(XAJAX_FUNCTION, "Make_Inactive");
+require_once ("xajax_func/users_func_xajax.php");
+$xajax->register(XAJAX_FUNCTION, "Add_User");
+require_once ("xajax_func/blog_func_xajax.php");
+$xajax->register(XAJAX_FUNCTION, "Add_New_Post");
+require_once ("xajax_func/news_func_xajax.php");
+$xajax->register(XAJAX_FUNCTION, "Add_News");
+$xajax->register(XAJAX_FUNCTION, "Edit_News");

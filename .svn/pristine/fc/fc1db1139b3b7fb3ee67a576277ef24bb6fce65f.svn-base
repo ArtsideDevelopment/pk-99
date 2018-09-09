@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<!--
+
+-->
+<html lang="ru">
+    <head>
+        <title>Главная страница</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="canonical" href="<?php echo $PAGE->getCanonicalUrl(); ?>"/>
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+          <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <div class="wrapper">
+            <?php include AS_GENERAL_HEADER; ?>
+            <nav id="mobile-catalog-menu">
+                <i class="icon-folder"></i><a href="#">Каталог товаров</a> <i class="icon-arrow-down"></i>
+            </nav>
+            <article id="offer">
+                <img src="/skins/img/main-banner.jpg" alt="Выпускаем снаряжение с 1998 года" />
+                
+            </article>
+            <article id="offer-mobile">
+                Выпускаем снаряжение с 1998 года                
+            </article>
+            <div class="grid-row">
+                <aside class="grid-2">
+                    <div class="block-header">ПРОДУКЦИЯ</div>
+                    <nav class="left-menu">
+                        <a href="#" class="button">Каталог товаров</a>
+                        <ul>
+                            <li><a href="#">Поиск по сайту >>></a></li>
+                            <li><a href="#">Поиск по сайту Яндексом >>></a></li>
+                            <li><a href="#">ИНТЕРНЕТ-МАГАЗИН</a></li>
+                            <li><a href="#">О продукции ПИК-99</a></li>
+                            <li><a href="#">Доставка и оплата</a></li>
+                            <li><a href="#">Условия гарантии</a></li>
+                            <li><a href="#">Условия возврата</a></li>
+                        </ul>
+                    </nav>
+                    <a href="#">Вопросы нам можно задавать в нашей Группе ВК >> </a>
+                    <iframe name="fXD9d898" frameborder="0" src="https://vk.com/widget_community.php?app=0&amp;width=150px&amp;_ver=1&amp;gid=10499184&amp;mode=0&amp;color1=FFFFFF&amp;color2=2B587A&amp;color3=5B7FA6&amp;class_name=&amp;height=400&amp;url=http%3A%2F%2Fpk-99.ru%2F&amp;referrer=http%3A%2F%2Fpk-99.ru%2Fim-velovitrina%2Ffolder%2Fryukzaki-vse&amp;title=%D0%9F%D0%98%D0%9A-99%2C%20%D0%BF%D1%80%D0%BE%D0%B8%D0%B7%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%BE%20%D1%82%D1%83%D1%80%D1%81%D0%BD%D0%B0%D1%80%D1%8F%D0%B6%D0%B5%D0%BD%D0%B8%D1%8F%2C%20%D0%BE%D0%BF%D1%82%2C%20%D1%80%D0%BE%D0%B7%D0%BD%D0%B8%D1%86%D0%B0%20%2F%2F%D0%9D%D0%BE%D0%B2%D0%BE%D1%81%D1%82%D0%B8%20%D0%BF%D1%80%D0%BE%D0%B8%D0%B7%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%B0&amp;161f2d2b309" width="150" height="400" scrolling="no" id="vkwidget1" style="overflow: hidden; height: 400px;"></iframe>
+                </aside>
+                <section id="content" class="grid-10">
+                    <div class="block-header">НОВОСТИ</div>
+                    <section class="news">
+                        <h2>Работа розничного магазина ПИК-99 весной 2018 г<span>01.03.2018 23:38</span></h2>
+                        
+                        <p>График работы нашего розничного магазина весной 2018 г.:</p>
+                        <ul>
+                            <li>1 марта - с 9:00 до 20:00</li>
+                            <li>2 марта - с 9:00 до 18:00</li>
+                            <li>3 марта - с 12:00 до 17:00</li>
+                        </ul>
+                    </section>
+                    <section class="news">
+                        <h2>Запускаем распродажу зимней одежды и термобелья<span>04.02.2018 18:11 </span></h2>
+                        
+                        <img src="/uploads/content/carpextreme_el08_kurtkap-kombez.jpg" style="float:left; margin: 0px 20px 0px 0px;"/>
+                        <p>Заканчивается зима - пошел последний месяц. И мы пускаем в распродажу еще оставшуюся на складе зимнюю одежду и термобелье.</p>
+                        <p>Вы можете не только купить эти товары со скидкой - но и еще сразу же ими воспользоваться! Ведь снега и льда по российским просторам еще очень много!</p>
+                        <p><strong>Распродажа будет происходить до 4 марта. Если только товар не закончится раньше.</strong></p>
+                        <a href="#">Что входит в распродажу - смотрите здесь >></a>
+                    </section>
+                </section>
+            </div>            
+            <?php include AS_GENERAL_FOOTER; ?>            
+        </div>
+        <link rel="stylesheet" href="/skins/css/styles.css">
+        <script src="https://yastatic.net/jquery/2.2.0/jquery.min.js"></script>
+        <script src="/skins/js/libs/jquery.swipebox.js"></script>
+        <script src="/skins/js/core.js"></script>
+    </body>
+</html>

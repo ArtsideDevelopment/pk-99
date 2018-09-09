@@ -1,0 +1,8 @@
+<?php
+require_once ("xajax_func/for_all_func_xajax.php");
+$xajax->register(XAJAX_FUNCTION, "Get_Modal_Dialog_Form");
+$xajax->register(XAJAX_FUNCTION, "Send_Modal_Dialog_Request");
+$xajax->register(XAJAX_FUNCTION, "Send_Action_Form");
+$xajax->register(XAJAX_FUNCTION, "Send_Test_Request");
+$xajax->register(XAJAX_FUNCTION, "Send_Call_Back_Request");
+$xajax->register(XAJAX_FUNCTION, "Send_Call_Back_Modal_Request");

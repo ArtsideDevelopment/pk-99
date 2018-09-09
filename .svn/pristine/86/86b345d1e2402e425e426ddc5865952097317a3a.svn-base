@@ -1,0 +1,67 @@
+/* 
+    Created on : 25.07.2018, 17:27:44
+    Author     : ArtSide
+*/
+
+.content{
+    @include links(14px, $menu-link-color-hover, $menu-link-color-hover);
+    table{
+      tr{
+          td{
+              vertical-align: middle;
+              padding:5px;
+              text-align:center;
+              img{
+                  box-shadow: none;
+                  vertical-align: middle;                          
+              }
+          }
+      }
+      &.gallery{
+          tr{                   
+              td{
+                  vertical-align:top;
+                  img{
+                      vertical-align:top;
+                  }
+              }
+          }
+      }
+    }    
+    ol{
+      list-style: decimal;
+      margin: 20px 0px 20px 30px;
+      li{
+          margin: 20px 0px;
+      }
+    }
+    ul{
+      list-style: disc;
+      margin: 20px 0px 20px 30px;
+      li{
+          margin: 10px 0px;
+      }
+    }
+    .pk-gallery{
+      img{
+          @include box-shadow(rgba(black, 0.5) 0 0 20px);
+      }
+    }            
+    &:after{
+        content: '';
+        display: block;
+        clear: both;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .content{
+        width: 100%;
+        padding: $mobile-padding;
+    }
+}
+@media screen and (max-width: 567px) {
+    .content{
+        
+    }
+}

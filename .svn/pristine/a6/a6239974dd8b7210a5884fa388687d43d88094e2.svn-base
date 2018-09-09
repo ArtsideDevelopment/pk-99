@@ -1,0 +1,108 @@
+<section id="content" class="grid-10">
+    <div class="block-header">Интернет-магазин</div>
+    <div id="bread-crumbs"><? echo $PAGE->getBreadCrumbs(); ?></div>
+    <? echo $PAGE->getContent(); ?>
+    <section id="catalog" class="shop">
+        <section id="categories">
+            <ul>
+                <li>
+                    <a class="img-block">
+                        <img alt="" src="/uploads/shop/categories/1.jpg"/>
+                    </a>
+                    <a href="#">Спальные мешки типа "кокон"</a>
+                </li>
+                <li>
+                    <a class="img-block">
+                        <img alt="" src="/uploads/shop/categories/2.jpg"/>
+                    </a>                                    
+                    <a href="#">Спальные мешки типа "одеяло"</a>
+                </li>
+                <li>
+                    <a class="img-block">
+                        <img alt="" src="/uploads/shop/categories/3.jpg"/>
+                    </a>
+                    <a href="#">Детские туристические спальные мешки</a>
+                </li>
+                <li>
+                    <a class="img-block">
+                        <img alt="" src="/uploads/shop/categories/4.png"/>
+                    </a>
+                    <a href="#">Спальные мешки для холодной погоды</a>
+                </li>
+                <li>
+                    <a class="img-block">
+                        <img alt="" src="/uploads/shop/categories/5.png"/>
+                    </a>
+                    <a href="#">Спальные мешки для лета</a>
+                </li>
+                <li>
+                    <a class="img-block">
+                        <img alt="" src="/uploads/shop/categories/6.jpg"/>
+                    </a>
+                    <a href="#">Легкие спальные мешки</a>
+                </li>
+                <li>
+                    <a class="img-block">
+                        <img alt="" src="/uploads/shop/categories/7.jpg"/>
+                    </a>
+                    <a href="#">Недорогие спальные мешки</a>
+                </li>
+                <li>
+                    <a class="img-block">
+                        <img alt="" src="/uploads/shop/categories/8.jpg"/>
+                    </a>
+                    <a href="#">Широкие спальные мешки (XL и XXL)</a>
+                </li>
+            </ul>
+        </section>
+        <section id="goods">
+            <div id="goods-sorting">Сортировать по: наименованию (<a href="#">возр</a><span>|</span><a href="#">убыв</a>), цене (<a href="#">возр</a><span>|</span><a href="#">убыв</a>)</div>
+            <section class="product">
+                <div class="product-img"><img alt="" src="/uploads/shop/goods/1.jpg"/></div>
+                <div class="product-description">
+                    <a href="#" class="product-name">_Флисовый спальный мешок - вкладыш - плед</a>
+                    <p class="product-characteristic">флис 200 гр/кв.м | разъемная молния | 75 х 200 см | вес 750 гр</p>
+                    <p class="product-manufacturer">производитель: <a href="#">ПИК-99</a></p>
+                    <p class="product-announcement">его можно использовать и как вкладыш | и как флисовый спальник | и как плед для пассажира в машине, для ночевки в аэропорту или .</p>
+                    <a class="product-link-announcement" href="#">подробнее>></a>
+                </div>
+                <div class="product-price">
+                    <div class="product-old-price">1 150 <span>руб.</span></div>
+                    <div class="product-new-price">900 <span>руб.</span></div>
+                    <!--<div>1 190 <span>руб</span></div>-->
+                    <a href="#" class="button">купить</a>
+                    <form>
+                        <div class="form-group">
+                            <select>                                               
+                                <option selected="selected">Выберите</option>
+                                <option>S</option>
+                                <option>M</option>
+                                <option>L</option>
+                                <option>XL</option>
+                            </select>
+                            <i class="bar"></i>
+                        </div>                                          
+                    </form>
+                    <div class="product-link">
+                        <p>вар.1=КМФ | вар.2=хаки</p>
+                    </div>
+                </div>
+
+            </section>
+            <section class="product">
+                <div class="product-img"><img alt="" src="/uploads/shop/goods/2.jpg"/></div>
+                <div class="product-description">
+                    <a href="#" class="product-name">Детский спальный мешок ПИК-99 ПИКколо-2</a>
+                    <p class="product-characteristic">утеплитель - Синтетический пух (2х-слойный) | подкладка - 100% хлопок, ситец | тип "одеяло с капюшоном" | рекомендуются для детей ростом до 135 см</p>
+                    <p class="product-manufacturer">производитель: <a href="#">ПИК-99</a></p>
+                    <p class="product-announcement">Вес ≈ 1.05 кг. Температура +7...+10°С и выше. Размер (140+30) х 67 см. Размер упаковки Ø21 х 25 см</p>
+                    <a class="product-link-announcement" href="#">подробнее>></a>
+                </div>
+                <div class="product-price">                                    
+                    <div>1 190 <span>руб</span></div>
+                    <a href="#" class="button-gray">увы, <br>закончились</a>
+                </div>
+            </section>
+        </section>
+    </section>
+</section>

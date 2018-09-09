@@ -1,0 +1,128 @@
+/* 
+    Created on : 13.07.2016, 8:37:42
+    Author     : Dulebsky А.
+    Copyright 2009-2016 ArtSide, Ltd.
+*/
+// mixins
+@mixin links ($size, $link-color, $hover-color) {
+  a {
+    color: $link-color;
+    font-size: $size; 
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: normal;  
+    &:hover{
+        color: $hover-color;
+        text-decoration: underline;
+    }
+    &:visited{
+        text-decoration: none;
+    }    
+    &:active {
+        text-decoration: none;
+    }    
+    &:focus {
+        color: $hover-color;
+        text-decoration: underline;       
+    }    
+  }
+}
+@mixin no-border-links ($size, $link, $hover) {
+  a {
+    color: $link;
+    font-size: $size; 
+    text-decoration: none;
+    border-bottom: none;
+    cursor: pointer;
+    font-weight: normal;  
+    &:hover{
+        color: $hover;
+        text-decoration: none;
+    }
+    &:visited{
+        text-decoration: none;
+    }    
+    &:active {
+        text-decoration: none;
+    }    
+    &:focus {
+        color: $hover;
+        text-decoration: none;
+    }    
+  }
+}
+@mixin button ($color-top, $color-center, $color_bottom, $text-color, $border, $size) {
+    @include border-radius(5px);
+    @include background-image(linear-gradient($color-top,  $color-center, $color_bottom));
+    text-align: center;
+    background-color: $color-center;
+    border: $border solid #bbbec1;
+    color: $text-color !important;    
+    font-size: $size;
+    padding: 10px 20px;
+    margin: 5px 0px;
+    cursor: pointer;
+    text-decoration: none;    
+    display: inline-block;
+    font-weight: bold;  
+    &:hover{
+        @include background-image(linear-gradient(darken($color-top,10%),  darken($color-center,10%), darken($color_bottom,10%)));
+        text-decoration: none;
+    }       
+    &:active {
+        @include box-shadow(rgba(black, 0) 0 3px 4px 1px, rgba(black, 0) 0 1px 2px 1px);
+    }    
+     
+}
+@mixin button-no-border ($color-top, $color-center, $color_bottom, $size) {
+    @include border-radius(5px);
+    @include background-image(linear-gradient($color-top,  $color-center, $color_bottom));
+    text-align: center;
+    border: none;
+    background-color: $color-center;    
+    color: #fff !important;    
+    font-size: $size;
+    padding: 10px 20px;
+    margin: 0px;
+    cursor: pointer;
+    text-decoration: none;    
+    display: inline-block;
+    font-weight: bold;  
+    &:hover{
+        @include background-image(linear-gradient(darken($color-top,10%),  darken($color-center,10%), darken($color_bottom,10%)));
+        text-decoration: none;
+    }       
+    &:active {
+        @include box-shadow(rgba(black, 0) 0 3px 4px 1px, rgba(black, 0) 0 1px 2px 1px);
+    }    
+     
+}
+@mixin border-button ($color, $bg-color, $size) {
+    @include box-shadow(rgba(black, 0.3) 0 2px 8px 1px, rgba(black, 0) 0 1px 2px 1px);    
+    text-align: center;
+    background:rgba($bg-color, 0.5);
+    border: 2px solid $color;
+    color: $color;
+    text-transform:uppercase;
+    font-size: $size;
+    padding: 15px 30px;
+    margin: 0px;
+    cursor: pointer;
+    text-decoration: none;
+    @include transition(all .5s ease-out);
+    display: inline-block;
+    font-weight: normal;  
+    &:hover{
+        @include box-shadow(rgba(black, 0) 0 2px 8px 1px, rgba(black, 0.4) 0 1px 2px 1px);    
+        background-color: $color;
+        color: #fff;
+    }       
+    &:active {
+        @include box-shadow(rgba(black, 0) 0 3px 4px 1px, rgba(black, 0) 0 1px 2px 1px);
+    }    
+     
+}
+@mixin padding-t-b ($padding) {
+    padding-top: $padding;
+    padding-bottom: $padding;
+}

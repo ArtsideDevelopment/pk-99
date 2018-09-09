@@ -1,0 +1,117 @@
+/* 
+    Created on : 03.03.2018, 12:46:53
+    Author     : ArtSide
+*/
+footer{
+    margin-top: 40px;
+    padding: 10px 0px;
+    border-top: 1px solid $gray;
+    #bottom-menu{
+        padding-bottom: 8px;
+        margin-bottom: 30px;
+        border-bottom: 1px solid $gray-light;
+    }
+    #social-links{
+        margin: 1rem 0rem;
+        @include no-border-links(1.4rem, $menu-link-color, $menu-link-color-hover);
+        a{
+            margin-left: 0.4rem;
+            display: inline-block;
+            padding: 1rem;
+            border: 1px solid $menu-link-color;
+            @include border-radius(100px);    
+            &.icon-social-vkontakte:hover, &.icon-social-facebook:hover, &.icon-social-instagram:hover{
+               border-color: $menu-link-color-hover;
+            }            
+        }
+    }
+    #contacts{
+        .phone{
+            font-size: 16px;
+            @include links(1rem, $menu-link-color, $menu-link-color-hover);
+        }
+        .address{
+            margin-top: 10px;
+            font-size: 12px;
+        }
+    }
+    #article-preview{
+        padding:0px 20px 0px 0px;
+        .article{
+            float: left;
+            width: 30%;
+            margin: 1.5%;
+            text-align: center;
+            .img-replace{
+                width: 100%;
+                background-color: $gray;
+                height: 100px;
+                line-height: 100px;
+                text-align: center;
+            }
+            @include links(1rem, $menu-link-color, $menu-link-color-hover);
+        }
+        &:after{
+                content: '';
+                display: block;
+                clear: both;
+            }
+    }    
+}
+#desctop-version{
+    display: none;
+    text-align: center;
+    @include links(1rem, $menu-link-color-hover, $menu-link-color-hover);  
+    position: fixed;
+    width: 100%;
+    z-index: 99;
+    @include padding-t-b(5px);
+    background-color: lighten($gray-light, 25%); 
+    bottom:0;
+    @include box-shadow(rgba(black, 0.3) 0 0 25px);
+}
+@media screen and (max-width: 767px) {
+    footer{
+        padding: $mobile-padding $mobile-padding 40px $mobile-padding;
+        #bottom-menu{
+            display: none;
+        }
+        #logo-bottom{
+            float: left;
+            width: 40%;
+            img{
+                width: 100%;
+            }
+        }
+        #social-links{
+            float: right;
+            width: 55%;
+        }
+        #contacts{
+            .phone{
+                font-size: 14px;
+                float: left;
+                width: 45%;
+            }
+            .address{
+                margin: 0px;
+                font-size: 14px;
+                float: right;
+                width: 45%;
+            }
+        }
+        #article-preview{
+            .article{
+                width: 100%;
+                padding: 20px;
+                .img-replace{
+                    height: 200px;
+                    line-height: 200px;
+                }
+            }
+        }        
+    }
+    #desctop-version{
+        display: block;
+    }
+}

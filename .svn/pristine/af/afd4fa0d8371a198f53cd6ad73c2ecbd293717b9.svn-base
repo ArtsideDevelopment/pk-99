@@ -1,0 +1,7 @@
+@import "for_all";
+@import "form";
+@import "header";
+@import "menu";
+@import "body";
+@import "shop";
+@import "footer";

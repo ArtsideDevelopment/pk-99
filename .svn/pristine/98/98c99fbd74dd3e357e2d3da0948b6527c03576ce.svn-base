@@ -1,0 +1,59 @@
+<?php
+/*   
+* libs/xajax_func_lib/users_func.php 
+* Functions for working with users    
+* Функции для работы с пользователями   
+* @author ArtSide   
+* @copyright © 2015 ArtSide   
+*/
+/* 
+* Функция добавления новой страницы 
+* Function to add a new page 
+* @param array $Id 
+* @return xajaxResponse 
+*/ 
+function Add_User($Id)
+{
+  $objResponse = new xajaxResponse();
+  // подключаем необходимые библиотеки  
+  require_once(AS_ROOT .'libs/security.php');
+  require_once(AS_ROOT .'libs/query_set.php');
+  require_once(AS_ROOT .'libs/query_variables/query_user.php');
+  // Подключаем проверку заполнения полей
+  include_once AS_ROOT .'libs/check/check_user.php';   
+  if($errors==0){
+      // проверяем все входящие переменные на наличие xss и sql инъекции
+      $user_id=check_form(AdminUser::getCookieUserId());
+      $password = md5(md5(trim($Id['password'])));      
+      try{      
+          /*
+          * Добавляем информацию о новом пользователе в базу данных
+          * insert user data in to db      
+          */ 
+          $res = DB::mysqliQuery(AS_DATABASE,"
+              INSERT INTO
+                  `". AS_DBPREFIX ."users`
+              SET 
+                  ".m_query($new_user_str, $Id).",
+                  `password`='".$password."', 
+                  `parent_id`='".$user_id."'
+              ");
+          }
+      catch (ExceptionDataBase $edb){
+          throw new ExceptionDataBase("Ошибка в запросе к базе данных",2, $edb);
+      }
+      $dialog_msg ="
+        <div id='modal_dialog_notice'>
+          <h2>Пользователь успешно добавлена!</h2>
+          <p>Далее Вы можете <a href='/admin/add-user'>Добавить еще одного пользователя</a>, 
+                    или перейти на <a href='/admin/settings/users/'>страницу со всеми пользователями</a></p>
+        </div>";
+      $objResponse->assign("modal_content_replace","innerHTML",  $dialog_msg);
+      $objResponse->call("modal_dialog_show");
+  } 
+  else{
+      $all_error="Проверьте правильность заполнения полей отмеченных *. ";
+  }
+  $objResponse->assign("all_error","innerHTML", $all_error);
+  return $objResponse;
+}

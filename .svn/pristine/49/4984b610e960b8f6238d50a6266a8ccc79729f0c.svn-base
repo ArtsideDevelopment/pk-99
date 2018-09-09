@@ -1,0 +1,190 @@
+/* 
+    Created on : 25.07.2018, 17:27:44
+    Author     : ArtSide
+*/
+
+.cart{
+    margin: $top-bottom-margin 0px;
+    ol{        
+        counter-reset: myCounter;        
+        li{
+            color: $gray-light;
+            $left-offset:5%;
+            list-style: none;
+            position: relative;                        
+            &:before{
+                position: absolute;                
+                counter-increment: myCounter;
+                content:counter(myCounter);
+                font-size: 1.2rem;                
+                @include border-radius(100px);
+                display: inline-block;
+                text-align: center;
+                margin: 5px 10px;
+                line-height: 3rem;
+                width: 3rem;
+                height: 3rem;
+            }
+        }
+    }
+    &__steps{
+        margin: $top-bottom-margin 0px;
+        li{
+            float: left;
+            width: 25%;
+            padding:5px 5px 5px 30px;
+            border: 2px solid $gray-light;
+            &:before{     
+                top: -10px;
+                left: -30px;
+                font-size: 2rem;
+                border: 2px solid $gray-light;
+                line-height: 3rem;
+                width: 3rem;
+                height: 3rem;
+                background-color: $white;
+            }
+        }
+        li.active{
+            background-color: $blue-lighten;
+            color: $white;   
+            &:before{
+                background-color: $blue-lighten;
+                color: $white;
+            }
+        }
+        &:after{
+            content: '';
+            display: block;
+            clear: both;
+        }
+    }
+    form{
+        &:after{
+            content: '';
+            display: block;
+            clear: both;
+        }
+    }
+    &__label{
+        float: left;
+        width: 40%;
+    }
+    &__input{
+        width: 55%;
+        float: left;
+        .form-group{
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+        table{
+            td{
+                padding: 10px;
+            }
+            tr:nth-child(even){
+                background-color: lighten($black, 93%); 
+            }
+        }
+    }
+    &__goods{
+        width: 40%;
+        border: 2px solid $gray-light;
+        padding: 0px 20px 20px 20px;
+        float: right;
+    }
+    &__goods-btn{
+        width: 40%;        
+        padding: 20px 0px;
+        float: right;
+    }
+    &__goods-description{
+        table{
+            width: 100%;
+            td{
+                padding:10px;
+                vertical-align: top;
+                p{
+                  position: relative;  
+                  margin: 0px 0px 5px 0px;
+                }  
+                img{
+                    width: 50px;
+                    height: auto;
+                }
+            }
+        }
+    }
+    &__goods-amount{
+        display: inline-block;
+        width: 49%;
+        text-align: left;
+    }
+    &__goods-cost{
+        display: inline-block;
+        width: 49%;
+        text-align: right;
+        float: right;
+    }
+    &__goods-del{
+        position: absolute;
+        display: inline-block;
+        right: -10px;
+        top: 0px;
+        color: $red;
+        text-decoration: none;
+    }
+    &__goods-total{
+        padding:10px 10px;
+        margin: 10px 0px 40px 0px;
+        border-top: 1px solid $gray-light;
+        border-bottom: 1px solid $gray-light;
+        table{
+            width:100%;
+            td:last-child{
+                text-align: right;
+            }            
+        }
+    }
+    table.step-1{        
+        width:100%;
+        tr{
+            th{
+                background-color: $bg-table-color;
+                padding: $table-padding-header;
+                text-align: left;
+            }
+            td{
+                vertical-align: top;
+                border-bottom: 1px solid $gray-light;
+                padding: $table-padding;
+                img{
+                    width: 100px;
+                    height: auto;
+                }
+            }
+        }
+        tfoot{
+            td{
+                padding: $table-padding-header;
+            }
+            td:first-child{
+                text-align: right;
+                
+            }
+        }
+    }
+    #sdk_block{
+        display: none;        
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .cart{
+        
+    }
+}
+@media screen and (max-width: 567px) {
+    .cart{
+        
+    }
+}

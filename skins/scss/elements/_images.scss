@@ -1,0 +1,12 @@
+/* 
+    Created on : 03.03.2018, 13:13:06
+    Author     : ArtSide
+*/
+img.responsive{
+    max-width: 100%;
+    height: auto;
+    width: auto\9; /* ie8 */
+}
+img.lazy{
+    display: none;
+}

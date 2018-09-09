@@ -1,0 +1,98 @@
+/* 
+    Created on : 04.03.2018, 19:55:21
+    Author     : ArtSide
+*/
+.h-menu{
+    ul{
+        li{
+            float: left;
+            list-style:none;
+            display: inline-block;
+            margin-right: 30px;
+            @include links(14px, $menu-link-color, $menu-link-color-hover);
+            padding:10px 0px 15px 0px;    
+            
+        }          
+        &:after{
+            content: '';
+            display: block;
+            clear: both;
+        }
+    }
+}
+.block-header{
+    font-size: 18px;
+    text-transform: uppercase;
+}
+.button{
+    @include button($blue-lighten, $blue-light, $blue, $white, 4px, 14px);
+}
+.button-gray{
+    @include button($btn-gray-lighten, $btn-gray-light, $btn-gray, $text-gray-color, 4px, 14px);
+}
+.mobile-display{
+    display: none;
+}
+.display_none{
+    display: none;
+    
+}
+.clear{
+    content: '';
+    display: block;
+    clear: both;
+}
+.grid-row{
+    .grid{
+        float: left;        
+    }
+    &:after{
+        content: '';
+        display: block;
+        clear: both;
+    }
+    .grid-2{
+        @extend .grid;
+        width: 16.6666%;
+    }
+    .grid-3{
+        @extend .grid;
+        width: 100/12*3%;
+    }
+    .grid-4{
+        @extend .grid;
+        width: 100/12*4%;
+    }
+    .grid-6{
+        @extend .grid;
+        width: 50%;
+    }
+    .grid-8{
+        @extend .grid;
+        width: 100/12*8%;
+    }  
+    .grid-9{
+        @extend .grid;
+        width: 100/12*9%;
+    }    
+    .grid-10{
+        @extend .grid;
+        width: 100/12*10%;
+    }    
+}
+
+@media screen and (max-width: 767px) {
+    .grid-row{  
+        .grid-3, .grid-4, .grid-6, .grid-9, .grid-10{ 
+            float: none;    
+            width: 100%;
+            padding: 0px !important;
+        }        
+    }
+    .mobile-no-display{
+        display: none;
+    }
+    .mobile-display{
+        display: block;
+    }
+}

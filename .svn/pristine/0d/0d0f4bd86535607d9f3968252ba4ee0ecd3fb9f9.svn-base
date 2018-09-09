@@ -1,0 +1,132 @@
+<?php
+/*   
+* libs/xajax/xajax_func/news_func_xajax.php 
+* Functions for working with news    
+* Функции для работы с новостями   
+* @author ArtSide   
+* @copyright © 2016 ArtSide   
+*/
+/* 
+* Функция добавления новости
+* Function to add a news
+* @param array $Id 
+* @return xajaxResponse 
+*/ 
+function Add_News($Id)
+{
+  $objResponse = new xajaxResponse();
+  // подключаем необходимые библиотеки  
+  require_once(AS_ROOT .'libs/security.php');
+  require_once(AS_ROOT .'libs/query_set.php');
+  require_once(AS_ROOT .'libs/query_variables/query_news.php');
+  // Подключаем проверку заполнения полей
+  include_once AS_ROOT .'libs/check/check_news.php';   
+  if($errors==0){
+      //инициализация переменных
+      $url_path="";
+      // проверяем все входящие переменные на наличие xss и sql инъекции
+      $alias=str_replace(" ", "-", strtolower(trim(trim(check_form($Id['alias'])),"/")));
+      $add_date=  date("Y-m-d H:i:s");
+         
+      try{
+          
+          $url_path ="news/".$alias;
+          /*
+          * Добавляем информацию о новой странице в базу данных
+          * insert page data in to db      
+          */ 
+          $res = DB::mysqliQuery(AS_DATABASE,"
+              INSERT INTO
+                  `". AS_DBPREFIX ."news`
+              SET 
+                  ".m_query($new_news_str, $Id).",                  
+                  `url_path`='".$url_path."', 
+                  `alias`='".$alias."',
+                  `add_date`='".$add_date."'    
+              ");
+      }
+      catch (ExceptionDataBase $edb){
+          throw new ExceptionDataBase("Ошибка в запросе к базе данных",2, $edb);
+      }
+      $dialog_msg ="
+        <div id='modal_dialog_notice'>
+          <h2>Новость успешно добавлена!</h2>
+          <p>Далее Вы можете <a href='/admin/news/add-news/'>Добавить еще одну новость</a>, 
+                    или перейти на <a href='/admin/news/'>страницу со всеми новостями</a></p>
+        </div>";
+      $objResponse->assign("modal_content_replace","innerHTML",  $dialog_msg);
+      $objResponse->call("modal_dialog_show");
+  } 
+  else{
+      $all_error="Проверьте правильность заполнения полей, отмеченных *. ";
+  }
+  //generateSiteMap();
+  $objResponse->assign("all_error","innerHTML", $all_error);
+  return $objResponse;
+}
+/* 
+* Функция редактирования новости 
+* Function to edit a news 
+* @param array $Id 
+* @return xajaxResponse 
+*/ 
+function Edit_News($Id)
+{
+  $objResponse = new xajaxResponse();
+  // подключаем необходимые библиотеки  
+  require_once(AS_ROOT .'libs/security.php');
+  require_once(AS_ROOT .'libs/query_set.php');
+  require_once(AS_ROOT .'libs/query_variables/query_news.php');
+  // Подключаем проверку заполнения полей
+  include_once AS_ROOT .'libs/check/check_news.php';   
+  if($errors==0){
+      //инициализация переменных
+      $url_path="";
+      // проверяем все входящие переменные на наличие xss и sql инъекции
+      $news_id=check_form($Id['news_id']);
+      $alias=str_replace(" ", "-", strtolower(trim(trim(check_form($Id['alias'])),"/")));         
+      try{
+          
+          $url_path ="news/".$alias;
+          /*
+          * Добавляем информацию о новой странице в базу данных
+          * insert page data in to db      
+          */ 
+          $res = DB::mysqliQuery(AS_DATABASE,"
+              UPDATE
+                  `". AS_DBPREFIX ."news`
+              SET 
+                  ".m_query($new_news_str, $Id).",                  
+                  `url_path`='".$url_path."', 
+                  `alias`='".$alias."'
+              WHERE
+                  `id`=".$news_id."
+              ");
+          // удаляем старое изображение
+          if($Id['news_main_img_new']*1==1){
+              if(isset($Id['old_news_main_img'])){
+                  require_once(AS_ROOT .'libs/files_func.php');
+                  $folder="news";
+                  $prefix_arr=array("", "thumb_");
+                  imgDelete($folder, $Id['old_news_main_img'], $prefix_arr);
+              }
+          }
+      }
+      catch (ExceptionDataBase $edb){
+          throw new ExceptionDataBase("Ошибка в запросе к базе данных",2, $edb);
+      }
+      $dialog_msg ="
+        <div id='modal_dialog_notice'>
+          <h2>Новость успешно изменена!</h2>
+          <p>Далее Вы можете перейти на <a href='/admin/news/'>страницу со всеми новостями</a></p>
+        </div>";
+      $objResponse->assign("modal_content_replace","innerHTML",  $dialog_msg);
+      $objResponse->call("modal_dialog_show");
+  } 
+  else{
+      $all_error="Проверьте правильность заполнения полей, отмеченных *. ";
+  }
+  //generateSiteMap();
+  $objResponse->assign("all_error","innerHTML", $all_error);
+  return $objResponse;
+}

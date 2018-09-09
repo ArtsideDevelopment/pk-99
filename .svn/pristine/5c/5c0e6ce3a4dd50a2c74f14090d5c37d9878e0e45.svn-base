@@ -1,0 +1,100 @@
+<?php
+/* 
+* Функция выбора виртуального номера
+* Function select virtual number
+* @param string $Id 
+* @return xajaxResponse 
+*/ 
+function Select_Service($Id)
+{
+    $objResponse = new xajaxResponse();
+    include_once AS_ROOT .'libs/check/check_service.php';
+    if($errors==0){
+    $step_2_form = "
+        <div class='col-md-12 arrow_box arrow_center c-body' >
+        <form class='form-horizontal' id='FormInputNumber' action='javascript:void(null);' onsubmit='_paq.push([\"trackEvent\",\"Demo\",\"Submit\",\"PhoneForm\",JSON.stringify({\"phone\":document.getElementById(\"client-phone\").value})])'>
+            <input type='hidden' name='service' id='service' value='".$Id['service']."'>
+            <div class='form-group'>                    
+                    <div class='col-md-6'>
+                        <label>Представьтесь, пожалуйста</label>
+                        <div class='input-group c-square input-group-lg'>
+                            <span id='sizing-addon1' class='input-group-addon'><i class='fa fa-user'></i></span>
+                            <input type='text' aria-describedby='sizing-addon1'  id='client-name' name='client-name' placeholder=''  class='form-control  c-square c-theme'>                            
+                        </div>                        
+                    </div>                    
+                    <div class='col-md-6'>
+                        <label>Номер Вашего мобильного телефона</label>
+                        <div class='input-group c-square input-group-lg'>
+                            <span id='sizing-addon1' class='input-group-addon'><i class='fa fa-mobile'></i></span>
+                            <input type='text' aria-describedby='sizing-addon1'  id='client-phone' name='client-phone' placeholder='+7(___)___-__-__'  class='form-control  c-square c-theme'>                            
+                        </div>
+                        <div id='form-error-client-phone' class='c-font-red'></div>                        
+                    </div>
+            </div>
+            <div class='form-group'>
+                    <div class='col-md-6'>
+                        <label>e-mail:</label>
+                        <div class='input-group c-square input-group-lg'>
+                            <span id='sizing-addon1' class='input-group-addon'><i class='fa fa-at'></i></span>
+                            <input type='text' aria-describedby='sizing-addon1' name='client-mail' placeholder='mail@example.com' class='form-control  c-square c-theme'>
+                        </div>
+                        <div id='form_error_client_mail' class='c-font-red'></div>
+                    </div>
+                    <div class='col-md-6'>
+                        <label>Промокод:</label>
+                        <div class='input-group c-square input-group-lg'>
+                            <span id='sizing-addon1' class='input-group-addon'><i class='fa fa-asterisk'></i></span>
+                            <input type='text' aria-describedby='sizing-addon1' name='promo' placeholder='******' class='form-control  c-square c-theme'>
+                        </div>
+                        <div id='form_error_promo' class='c-font-red'></div>
+                    </div>
+            </div>
+            <div class='c-center'>
+                <input type='submit' name='send_form' id='go_to_step_3' class='btn c-theme-btn c-btn-square c-btn-uppercase c-btn-bold' value='Отправить' onclick='xajax_Input_Contacts(xajax.getFormValues(\"FormInputNumber\"));' />
+            </div>
+        </form>
+        </div>
+        ";
+        $objResponse->assign("advdays-block-replace","innerHTML", $step_2_form);
+        $objResponse->script("window.location.hash ='step_2'");
+        $objResponse->script("phoneMask('#client-phone');");
+    }    
+    return $objResponse;
+}
+/* 
+* Функция выбора виртуального номера
+* Function select virtual number
+* @param string $Id 
+* @return xajaxResponse 
+*/ 
+function Input_Contacts($Id)
+{
+    $objResponse = new xajaxResponse();
+    include_once AS_ROOT .'libs/check/check_mobile_advdays.php';
+    if($errors==0){
+        include_once AS_ROOT .'libs/orders_func.php'; 
+        orderHandler('advdays2016', $Id['client-name'], $Id['client-phone'], $Id['client-mail'], $Id['service']); 
+        $objResponse->script("AnalyticsGoal.handler('test_free');");
+        $step_3_form = "
+            <div class='col-md-12 arrow_box arrow_right c-body' >
+            <div class='col-md-5'>			
+                        <img class='img-responsive' src='/assets/base/img/content/solutions/incoming-call.png'>
+                    </div>
+                    <div class='col-md-7'>	
+                        <div class='c-content-title-1'>
+                            <h3 class='c-font-uppercase c-font-bold c-left'>Спасибо за регистрацию!</h3>
+                        </div>                    	
+                        <p class='c-left'>
+                            Вы получили бесплатный тестовый период - 1 месяц. В рабочее время с Вами свяжутся наши специалисты и расскажут необходимые действия для использования выбранной Вами услуги 
+                        </p>
+                        <p class='c-left'>
+                            Проверьте свой мобильный - Вам звонят. 
+                        </p>
+                    </div>   
+            </div>
+            ";
+        $objResponse->assign("advdays-block-replace","innerHTML", $step_3_form); 
+        $objResponse->script("window.location.hash ='step_3'");
+    }    
+    return $objResponse;
+}

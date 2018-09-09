@@ -1,0 +1,2 @@
+<div class="block-header"><? echo $PAGE->getTitle(); ?></div>
+<? echo $PAGE->getContent(); ?>

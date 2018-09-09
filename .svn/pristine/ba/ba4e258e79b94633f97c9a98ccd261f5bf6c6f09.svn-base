@@ -1,0 +1,4 @@
+<?php
+require_once ("xajax_func/advdays2016_func_xajax.php");
+$xajax->register(XAJAX_FUNCTION, "Select_Service");
+$xajax->register(XAJAX_FUNCTION, "Input_Contacts");

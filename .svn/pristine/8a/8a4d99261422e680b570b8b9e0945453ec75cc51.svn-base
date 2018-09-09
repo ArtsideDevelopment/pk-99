@@ -1,0 +1,430 @@
+<?php
+/*   
+* libs/xajax_func_lib/pages_func.php 
+* Functions for working with pages    
+* Функции для работы со страницами   
+* @author ArtSide   
+* @copyright © 2012 ArtSide   
+*/
+/* 
+* Функция добавления новой страницы 
+* Function to add a new page 
+* @param array $Id 
+* @return xajaxResponse 
+*/ 
+function Add_New_Page($Id)
+{
+  $objResponse = new xajaxResponse();
+  // подключаем необходимые библиотеки  
+  require_once(AS_ROOT .'libs/security.php');
+  require_once(AS_ROOT .'libs/query_set.php');
+  require_once(AS_ROOT .'libs/query_variables/query_content.php');
+  // Подключаем проверку заполнения полей
+  include_once AS_ROOT .'libs/check/check_page.php';   
+  if($errors==0){
+      //инициализация переменных
+      $hierarchy =1;
+      $url_path="";
+      // проверяем все входящие переменные на наличие xss и sql инъекции
+      $parent_id=check_form($Id['parent_id']);
+      $alias_page=str_replace(" ", "-", strtolower(trim(trim(check_form($Id['alias_page'])),"/")));
+      /*
+      * находим максимальное занчение hierarchy, записанное в bd, 
+      * для определения текущего значения hierarchy для добавляемой страницы       
+      */      
+      try{
+          $res_hierarchy = DB::mysqliQuery(AS_DATABASE, "
+              SELECT 
+                  MAX(hierarchy) 
+              FROM
+                  `". AS_DBPREFIX ."content`
+              WHERE  
+                  `parent_id`=".$parent_id."
+              ");
+          if($res_hierarchy->num_rows>0){
+              $row_hierarchy = $res_hierarchy->fetch_array();
+              $hierarchy=$row_hierarchy[0]+1;
+          }
+          // находим url адрес родителя для построения текущего url адреса страницы      
+          if($parent_id*1>0){
+              $res_parent = DB::mysqliQuery(AS_DATABASE,"
+                  SELECT 
+                      `url_path` 
+                  FROM
+                      `". AS_DBPREFIX ."content` 
+                  WHERE  
+                      `id`=".$parent_id."
+                  "); 
+              if($res_parent->num_rows>0){
+                   $row_parent = $res_parent->fetch_array();
+                   $url_path=trim($row_parent[0], "/"); // удаляем лишние / чтобы сформировать необходимый url
+              }
+          }
+          // формируем url адрес текущей страницы
+          $url_path=trim($url_path."/".$alias_page, "/"); // удаляем лишние / он появляется если parent_id = 0   
+          /*
+          * Добавляем информацию о новой странице в базу данных
+          * insert page data in to db      
+          */ 
+          $res = DB::mysqliQuery(AS_DATABASE,"
+              INSERT INTO
+                  `". AS_DBPREFIX ."content`
+              SET 
+                  ".m_query($new_page_str, $Id).",
+                  `type`='content',
+                  `url_path`='".$url_path."', 
+                  `alias_page`='".$alias_page."', 
+                  `hierarchy`=".$hierarchy.",
+                  `priority`=0.8
+              ");
+      }
+      catch (ExceptionDataBase $edb){
+          throw new ExceptionDataBase("Ошибка в запросе к базе данных",2, $edb);
+      }
+      $dialog_msg ="
+        <div id='modal_dialog_notice'>
+          <h2>Страница успешно добавлена!</h2>
+          <p>Далее Вы можете <a href='/admin/add-page'>Добавить еще одну страницу</a>, 
+                    или перейти на <a href='/admin/pages'>страницы сайта</a></p>
+        </div>";
+      $objResponse->assign("modal_content_replace","innerHTML",  $dialog_msg);
+      $objResponse->call("modal_dialog_show");
+  } 
+  else{
+      $all_error="Проверьте правильность заполнения полей, отмеченных *. ";
+  }
+  generateSiteMap();
+  $objResponse->assign("all_error","innerHTML", $all_error);
+  return $objResponse;
+}
+/* 
+* Функция редактирования страницы 
+* Function to edit a page 
+* @param array $Id 
+* @return xajaxResponse 
+*/ 
+function Edit_Page($Id)
+{
+  $objResponse = new xajaxResponse();
+  // подключаем необходимые библиотеки
+  require_once(AS_ROOT .'libs/query_set.php');
+  require_once(AS_ROOT .'libs/query_variables/query_content.php');
+  // Подключаем проверку заполнения полей
+  include_once AS_ROOT .'libs/check/check_page.php';   
+  if($errors==0){
+      //инициализация переменных      
+      $url_path="";
+      // проверяем все входящие переменные на наличие xss и sql инъекции
+      $page_id=check_form($Id['page_id']);
+      $parent_id=check_form($Id['parent_id']);
+      $parent_id_old=check_form($Id['parent_id_old']);
+      $hierarchy_old=check_form($Id['hierarchy_old']);
+      $alias_page=str_replace(" ", "-", strtolower(trim(trim(check_form($Id['alias_page'])),"/")));
+      /*----------------------------------------
+      * Формируем url адрес страницы
+      * get url of new page   
+      -----------------------------------------*/
+      try {
+          // находим url адрес родителя для построения текущего url адреса страницы      
+          if($parent_id*1>0){
+              $res_parent = DB::mysqliQuery(AS_DATABASE, "
+                  SELECT 
+                      `url_path` 
+                  FROM
+                      `". AS_DBPREFIX ."content` 
+                  WHERE  
+                      `id`=".$parent_id." 
+                  "); 
+              if($res_parent->num_rows>0){
+                   $row_parent = $res_parent->fetch_array();
+                   $url_path = trim($row_parent['url_path'], "/"); // удаляем лишние / чтобы сформировать необходимый url
+              }
+          }
+          // формируем url адрес текущей страницы
+          $url_path=trim($url_path."/".$alias_page, "/"); // удаляем лишние / он появляется если parent_id = 0 
+          /*----------------------------------------
+          * Проверяем изменился ли родитель страницы
+          * check parent page    
+          -----------------------------------------*/ 
+          // родитель изменился
+          if($parent_id!=$parent_id_old){
+              $hierarchy =1;
+              /*
+              * находим максимальное занчение hierarchy, записанное в bd, 
+              * для определения текущего значения hierarchy для редактируемой страницы    
+              */      
+              $res_hierarchy = DB::mysqliQuery(AS_DATABASE, "
+                  SELECT 
+                      MAX(hierarchy) 
+                  FROM
+                      `". AS_DBPREFIX ."content` 
+                  WHERE  
+                      `parent_id`=".$parent_id." 
+                  ");
+              if($res_hierarchy->num_rows>0){
+                  $row_hierarchy = $res_hierarchy->fetch_array();;
+                  $hierarchy=$row_hierarchy[0]+1;
+              }
+              // уменьшаем на 1 иерархию всех страниц являющихся братьями
+              $res_hierarchy = DB::mysqliQuery(AS_DATABASE,"
+                   UPDATE   
+                       `". AS_DBPREFIX ."content` 
+                   SET
+                       hierarchy = hierarchy - 1
+                   WHERE  `parent_id`=".$parent_id_old." && hierarchy>".$hierarchy_old." "  
+                              );
+              /*
+              * Обновляем информацию странице в базе данных
+              * Update page data in db      
+              */ 
+              $res_update = DB::mysqliQuery(AS_DATABASE,"
+                   UPDATE   
+                       `". AS_DBPREFIX ."content` 
+                   SET 
+                       ".m_query($new_page_str, $Id).",
+                       `url_path`='".$url_path."', 
+                       `alias_page`='".$alias_page."', 
+                       `hierarchy`=".$hierarchy."
+                   WHERE
+                       `id`=".$page_id."
+                   ");
+          }
+          // Родитель не измнился
+          else{ 
+              /*
+              * Обновляем информацию странице в базе данных
+              * Update page data in db      
+              */ 
+              $res_update = DB::mysqliQuery(AS_DATABASE,"
+                   UPDATE   
+                       `". AS_DBPREFIX ."content` 
+                   SET 
+                       ".m_query($new_page_str, $Id).",
+                       `url_path`='".$url_path."', 
+                       `alias_page`='".$alias_page."'
+                   WHERE
+                       `id`=".$page_id."
+                   ");
+          }      
+      /*--------------------------------------*/
+      }
+      catch (ExceptionDataBase $edb){
+          throw new ExceptionDataBase("Ошибка в запросе к базе данных",2, $edb);
+      }
+      $dialog_msg ="
+        <div id='modal_dialog_notice'>
+          <h2>Страница успешно обновлена!</h2>
+          <p>Далее Вы можете вернуться ко всем <a href='/admin/pages'>страницам сайта</a></p>
+        </div>";
+      $objResponse->assign("modal_content_replace","innerHTML",  $dialog_msg);
+      $objResponse->call("modal_dialog_show");      
+  }
+  else{
+      $all_error="Проверьте правильность заполнения полей, отмеченных *. ";
+  }
+  generateSiteMap();
+  $objResponse->assign("all_error","innerHTML", $all_error);
+  return $objResponse;
+}
+/* 
+* Функция удаления страницы 
+* Function to delit a page 
+* @param array $Id 
+* @return xajaxResponse 
+*/ 
+function Delete_Content($Id){
+    if(strlen(trim($Id))!=0){
+        $objResponse = new xajaxResponse();
+        parse_str($Id, $arr_var); // $content_id; $parent_id; $hierarchy
+        /*
+        * проверяем все входящие переменные на sql иньекции
+        * check all input variables on sql injections
+        */ 
+        $table=  check_form($arr_var['type']);
+        $content_id=  check_form($arr_var['id']);        
+        $parent_id=  check_form($arr_var['parent_id']);
+        $hierarchy=  check_form($arr_var['hierarchy']);
+        try {
+            /*
+            * Удаляем страницу
+            * Delete page      
+            */ 
+            $res_del = DB::mysqliQuery(AS_DATABASE,"
+                DELETE FROM   
+                    `". AS_DBPREFIX .$table."`
+                WHERE 
+                    `id`=".$content_id.""  
+                              ); 
+            /*
+            * уменьшаем на 1 иерархию всех страниц являющихся братьями
+            * decrement hierarchy all brothers pages
+            */  
+            $res_hierarchy = DB::mysqliQuery(AS_DATABASE,"
+               UPDATE   
+                   `". AS_DBPREFIX .$table."` 
+               SET
+                   hierarchy = hierarchy - 1
+               WHERE  
+                   `parent_id`=".$parent_id." && hierarchy>".$hierarchy." "  
+                          );
+            /*-----------------------------------*/
+        }
+        catch (ExceptionDataBase $edb){
+            throw new ExceptionDataBase("Ошибка в запросе к базе данных",2, $edb);
+        }        
+        include_once AS_ROOT .'libs/admin/admin_pages_func.php'; 
+        $table_pages="";
+        if($table=='content'){
+            $table_pages=getAdminPagesTable(0, 'content', '', '');
+        }
+        elseif ($table=='catalog') {
+            $table_pages=getAdminCatalogTable(0, 'content', '', '');
+        }
+        $objResponse->assign("table_style", "innerHTML", $table_pages);
+        generateSiteMap();  
+    }
+    return $objResponse;
+}
+/* 
+* Функция установления активного состояния страницы 
+* The function of establishing an active state of the page 
+* @param array $Id 
+* @return xajaxResponse 
+*/ 
+function Make_Active($Id){
+   parse_str($Id);
+   $content_id_checked=check_form($content_id);
+   $table=check_form($content_type);
+   if(strlen(trim($content_id_checked))!=0){
+      $objResponse = new xajaxResponse();   
+      try{
+          $res = DB::mysqliQuery(AS_DATABASE,"
+               UPDATE   
+                   `". AS_DBPREFIX ."content` 
+               SET
+                   `active`=1 
+               WHERE  
+                   `id`=".$content_id_checked." "  
+                          );          
+      }
+      catch (ExceptionDataBase $edb){
+          throw new ExceptionDataBase("Ошибка в запросе к базе данных",2, $edb);
+      }
+      $active="<a href=\"javascript:void(null);\" onclick=\"xajax_Make_Inactive('content_id=".$content_id_checked."&content_type=".$table."'); return false;\" ><i class='fa fa-check-square-o fa-2x'></i></a>";
+      $objResponse->assign("replace_active_".$content_id, "innerHTML", $active);	  
+  }
+  return $objResponse;
+}
+/* 
+* Функция установления неактивного состояния страницы 
+* The function of establishing an inactive state of the page 
+* @param array $Id 
+* @return xajaxResponse 
+*/ 
+function Make_Inactive($Id){
+   parse_str($Id);
+   $content_id_checked=check_form($content_id);
+   $table=check_form($content_type);
+   if(strlen(trim($content_id_checked))!=0){
+      $objResponse = new xajaxResponse();
+      try{
+          $res = DB::mysqliQuery(AS_DATABASE,"
+               UPDATE   
+                   `". AS_DBPREFIX ."content` 
+               SET
+                   `active`=0 
+               WHERE  
+                   `id`=".$content_id_checked." "  
+                          );
+      }
+      catch (ExceptionDataBase $edb){
+          throw new ExceptionDataBase("Ошибка в запросе к базе данных",2, $edb);
+      }
+	  $active="<a href=\"javascript:void(null);\" onclick=\"xajax_Make_Active('content_id=".$content_id_checked."&content_type=".$table."'); return false;\" ><i class='fa fa-square-o fa-2x'></i></a>";
+	  $objResponse->assign("replace_active_".$content_id, "innerHTML", $active);
+  }
+  return $objResponse;
+}
+/* 
+* Функция изменения порядка следования страницы 
+* The function changes the order of pages 
+* @param array $Id 
+* @return xajaxResponse 
+*/ 
+function Make_Higher($Id){
+   $objResponse = new xajaxResponse();
+   parse_str($Id);
+   $hierarchy_higher_child=$hierarchy-1;
+   
+   $res = mysqlQuery("SELECT *   
+                        FROM `". AS_DBPREFIX ."content` 
+					    WHERE `parent_id`='".$parent_id."' && `hierarchy`='".$hierarchy_higher_child."' "  
+                      );
+   $row = mysql_fetch_assoc($res);
+   $res_hi = mysqlQuery(" UPDATE   
+                       `". AS_DBPREFIX ."content` SET `hierarchy`='".$hierarchy_higher_child."' WHERE `id`='".$content_id."' "  
+                      );
+   $res_lo = mysqlQuery(" UPDATE   
+                       `". AS_DBPREFIX ."content` SET `hierarchy`='".$hierarchy."' WHERE `id`='".$row['id']."' "  
+                      ); 
+   
+  // define('AS_SUB_MENU', AS_ROOT .'admin/admin_submenu/router.php'); 	
+  ob_start(); 
+  include AS_ROOT .'admin/main/router.php';
+  $content_list = ob_get_contents();      
+  ob_end_clean();
+  $objResponse->assign("content_list", "innerHTML", $content_list); //content_list находится в admin/main/index.tpl 
+  $script="
+  	$('table.table_pages tr').addClass('tr_border');
+	$('table.table_pages tr:first').removeClass('tr_border');
+	$('table.table_pages tr:last').removeClass('tr_border');
+    $('table.table_pages tr').hover(function () {
+		 $(this).addClass('tr_hover');
+	},function () {
+		  $(this).removeClass('tr_hover');		 
+	});
+  ";
+  $objResponse->script($script);
+  return $objResponse;
+
+}
+function Make_Lower($Id){
+   include_once AS_ROOT .'libs/mysql.php'; 
+   require_once(AS_ROOT .'libs/security.php');
+   $objResponse = new xajaxResponse();
+   parse_str($Id);
+   $hierarchy_lower_child=$hierarchy+1;
+   
+   $res = mysqlQuery("SELECT *   
+                        FROM `". AS_DBPREFIX ."content` 
+					    WHERE `parent_id`='".$parent_id."' && `hierarchy`='".$hierarchy_lower_child."' "  
+                      );
+   $row = mysql_fetch_assoc($res);
+   $res_hi = mysqlQuery(" UPDATE   
+                       `". AS_DBPREFIX ."content` SET `hierarchy`='".$hierarchy_lower_child."' WHERE `id`='".$content_id."' "  
+                      );
+   $res_lo = mysqlQuery(" UPDATE   
+                       `". AS_DBPREFIX ."content` SET `hierarchy`='".$hierarchy."' WHERE `id`='".$row['id']."' "  
+                      ); 
+   
+  // define('AS_SUB_MENU', AS_ROOT .'admin/admin_submenu/router.php'); 	
+  ob_start(); 
+  include AS_ROOT .'admin/main/router.php';
+  $content_list = ob_get_contents();      
+  ob_end_clean();
+  $objResponse->assign("content_list", "innerHTML", $content_list); //content_list находится в admin/main/index.tpl 
+  $script="
+  	$('table.table_pages tr').addClass('tr_border');
+	$('table.table_pages tr:first').removeClass('tr_border');
+	$('table.table_pages tr:last').removeClass('tr_border');
+    $('table.table_pages tr').hover(function () {
+		 $(this).addClass('tr_hover');
+	},function () {
+		  $(this).removeClass('tr_hover');		 
+	});
+  ";
+  $objResponse->script($script);
+  return $objResponse;
+
+}
+?>

@@ -1,0 +1,362 @@
+<?php
+/* 
+* Функция получения различных форма для модального онка
+* Function get forms for modal dialog
+* @param string $Id 
+* @return xajaxResponse 
+*/ 
+function Get_Modal_Dialog_Form($Id)
+{
+    $objResponse = new xajaxResponse();
+    $form="";
+    if(strlen(trim($Id))>0){
+         $form="
+            <div id='dialog_form' class='form_block'>
+                <form id='FormDialogModal' action='javascript:void(null);' onSubmit='xajax_Send_Modal_Dialog_Request(xajax.getFormValues(\"FormDialogModal\"));' >               
+                ";
+        switch($Id)  
+        {          
+            case 'call_back':      
+                $form.="
+                    <input type='hidden' name='request_type' id='request_type' value='call_back'>
+                    <div class='row field-row dialog_header'>
+                        <h1>Закажите обратный звонок</h1>
+                        <p>мы перезвоним Вам в удобное для Вас время</p>
+                    </div>
+                    <div class='row field-row'>
+                        <div class='col-xs-12 col-sm-12'>
+                            <label>Представьтесь, пожалуйста:</label>
+                            <input type='text' name='call_back_fio' id='call_back_fio' class='le-input'>
+                        </div>
+                        <div class='form_error' id='form_error_call_back_fio'></div>
+                    </div>
+                    <div class='row field-row'>
+                        <div class='col-xs-12 col-sm-6'>
+                            <label>Контактный телефон: *</label>
+                            <input type='text' name='call_back_phone' id='call_back_phone' class='le-input'>
+                            <div class='form_error' id='form_error_call_back_phone'></div>
+                        </div>
+                        <div class='col-xs-12 col-sm-6'>
+                            <label>Удобное время для звонка</label>
+                            <input type='text' name='call_back_time' id='call_back_time' class='le-input'>
+                        </div>
+                    </div>  
+                    <div class='form_error' id='all_errors'></div>
+                    <div class='dialog_btn'>
+                        <input type='submit' name='send_form' id='send_form' class='le-button big' value='Заказать обратный звонок' >
+                    </div>                        
+                    ";              
+            break;             
+            default:  
+                $form="";  
+            break;      
+        }   
+        $form.="
+                </form> 
+            </div> ";
+        $objResponse->assign("modal_content_replace","innerHTML", $form);
+        $objResponse->call("modal_dialog_show(700)");
+        $objResponse->call("ga_client_id_for_modal");
+    }    
+    return $objResponse;
+}
+/* 
+* Функция отправки запросов из модального окна
+* Function send requests from modal window
+* @param string $Id 
+* @return xajaxResponse 
+*/ 
+function Send_Modal_Dialog_Request($Id)
+{
+    $objResponse = new xajaxResponse(); 
+    $success_text="";
+    $all_errors="";
+    // Подключаем проверку заполнения полей
+    include_once AS_ROOT .'libs/check/check_modal_dialog.php';   
+    if($errors==0){
+        $request_type = $Id['request_type'];
+        if(strlen(trim($request_type))>0){
+            // Инициализация переменных
+            switch($request_type)  
+            {          
+                case 'call_back':    
+                    include_once AS_ROOT .'libs/orders_func.php'; 
+                    orderHandler('call_back', $Id['contact-name'], $Id['contact-phone']); 
+                    $dialog_msg="
+                        <div id='dialog_form'>
+                            <div class='dialog_header'>
+                                <div class='c-font-24 c-font-sbold c-center'>Ваш запрос отправлен!</div>
+                                <p class='c-center'>Спасибо за обращение в нашу компанию! В ближайшее время с Вами свяжутся наши менеджеры.</p>
+                            </div>
+                        </div>
+                      ";  
+                     $objResponse->script("AnalyticsGoal.handler('".$request_type."');");
+                break;                 
+                default:   
+                break;      
+            }        
+            $objResponse->assign("modal_content_replace","innerHTML", $dialog_msg);
+            $objResponse->script("AnalyticsGoal.handler('call_back');");
+        }    
+    }
+    else{
+        $all_errors="Проверьте правильность заполнения полей, отмеченных *";      
+        
+    }    
+    $objResponse->assign("all_errors","innerHTML", $all_errors);
+    return $objResponse;
+}
+/* 
+* Функция отправки запросов из call back модального окна 
+* Function send requests from call back modal window
+* @param string $Id 
+* @return xajaxResponse 
+*/ 
+function Send_Call_Back_Request($Id)
+{
+    $objResponse = new xajaxResponse();    
+       
+    if($Id['call-back-input-phone']){
+        include_once AS_ROOT .'libs/orders_func.php'; 
+        orderHandler('call_back_widget', '', $Id['call-back-input-phone']); 
+        $response="Ожидайте звонка";              
+        $objResponse->assign("call-back-response","innerHTML", $response);
+        $objResponse->script("AnalyticsGoal.handler('call_back_widget');");
+           
+    }
+    return $objResponse;
+}
+/* 
+* Функция отправки запросов из call back модального окна 
+* Function send requests from call back modal window
+* @param string $Id 
+* @return xajaxResponse 
+*/ 
+function Send_Call_Back_Modal_Request($Id)
+{
+    $objResponse = new xajaxResponse();    
+       
+    if($Id['vtell-modal-dialog-input-phone']){
+        include_once AS_ROOT .'libs/orders_func.php';     
+        $current_hour = date("H");
+        if($current_hour>10 & $current_hour<21){
+            $response="
+                    <p>Спасибо за обращение в нашу компанию!</p>
+                    <p>В течение 5 минут с Вами свяжутся наши специалисты и расскажут о подробностях акции!</p>";
+        }
+        else{
+            $response="
+                    <p>Спасибо за обращение в нашу компанию!</p>
+                    <p>Сейчас в офисе никого нет. С Вами свяжутся наши специалисты и расскажут о подробностях акции в рабочее время с 10.00 до 21.00!</p>";
+        }    
+        orderHandler('call_back_modal', '', $Id['vtell-modal-dialog-input-phone']);
+        $objResponse->assign("vtell-modal-dialog-action","innerHTML", $response);
+        $objResponse->script("AnalyticsGoal.handler('call_back_widget');");
+           
+    }
+    return $objResponse;
+}
+/* 
+* Функция отправки формы на различных страницах сайта
+* Function send form from pages
+* @param string $Id 
+* @return xajaxResponse 
+*/ 
+function Send_Action_Form($Id)
+{
+    $objResponse = new xajaxResponse(); 
+    $all_errors="";   
+    if(strlen(trim($Id['client-phone']))>0){
+        $request_type = $Id['request_type'];
+        if(strlen(trim($request_type))>0){
+            switch($request_type)  
+            {          
+                case 'action_500_minutes':    
+                    include_once AS_ROOT .'libs/orders_func.php'; 
+                    orderHandler('action', "", $Id['client-phone']); 
+                    $dialog_msg="
+                        <div id='dialog_form'>
+                            <div class='dialog_header'>
+                                <div class='c-font-24 c-font-sbold c-center'>Ваш запрос отправлен!</div>
+                                <p class='c-center'>Спасибо за обращение в нашу компанию! В ближайшее время с Вами свяжутся наши менеджеры.</p>
+                            </div>
+                        </div>
+                      ";  
+                     $objResponse->script("AnalyticsGoal.handler('".$request_type."');");
+                break;  
+                case 'messenger_service':
+                    include_once AS_ROOT .'libs/orders_func.php';
+                    orderHandler('action', $Id['client-name'], $Id['client-phone'], '', "TextBack"); 
+                    $dialog_msg="
+                        <div id='dialog_form'>
+                            <div class='dialog_header'>
+                                <div class='c-font-24 c-font-sbold c-center'>Ваш запрос отправлен!</div>
+                                <p class='c-center'>Спасибо за обращение в нашу компанию! Как только сервис будет готов, мы сообщим Вам об этом!</p>
+                            </div>
+                        </div>
+                      ";  
+                     $objResponse->script("AnalyticsGoal.handler('".$request_type."');");
+                break; 
+                case 'avtoinformator_service':
+                    include_once AS_ROOT .'libs/orders_func.php';
+                    orderHandler('action', $Id['client-name'], $Id['client-phone'], '', "Автоинформатор"); 
+                    $dialog_msg="
+                        <div id='dialog_form'>
+                            <div class='dialog_header'>
+                                <div class='c-font-24 c-font-sbold c-center'>Ваш запрос отправлен!</div>
+                                <p class='c-center'>Спасибо за обращение в нашу компанию! В течение 5 минут в рабочее время с Вами свяжутся наши специалисты и ответят на все интересующие вопросы!</p>
+                            </div>
+                        </div>
+                      ";  
+                     $objResponse->script("AnalyticsGoal.handler('".$request_type."');");
+                break;
+                case 'online_tracker_service':
+                    include_once AS_ROOT .'libs/orders_func.php';
+                    orderHandler('action', $Id['client-name'], $Id['client-phone'], '', "Online tracker"); 
+                    $dialog_msg="
+                        <div id='dialog_form'>
+                            <div class='dialog_header'>
+                                <div class='c-font-24 c-font-sbold c-center'>Ваш запрос отправлен!</div>
+                                <p class='c-center'>Спасибо за обращение в нашу компанию! В течение 5 минут в рабочее время с Вами свяжутся наши специалисты и ответят на все интересующие вопросы!</p>
+                            </div>
+                        </div>
+                      ";  
+                     $objResponse->script("AnalyticsGoal.handler('".$request_type."');");
+                break;
+                default:   
+                break;      
+            }        
+            $objResponse->assign("modal_content_replace","innerHTML", $dialog_msg);
+            $objResponse->script("$('#call-back-form').modal()");
+        }    
+    }
+    else{
+        $all_errors="Необходимо указать номер телефона";
+    }    
+    $objResponse->assign("form-error-client-phone","innerHTML", $all_errors);
+    return $objResponse;
+}
+/* 
+* Функция отправки запроса на тестирование услуги
+* Function send test service request
+* @param string $Id 
+* @return xajaxResponse 
+*/ 
+function Send_Test_Request($Id)
+{
+    $objResponse = new xajaxResponse(); 
+    $all_errors="";   
+    $request_type = $Id['request_type'];
+    if(strlen(trim($request_type))>0){
+        switch($request_type)  
+        {          
+            case 'telemarketing':    
+                $verification_code = $Id['verification_code'];
+                if($verification_code == 'Dhr3&Deg7'){
+                    if(!empty($Id['clients-phone'])){
+                        $tmp = nl2br(trim($Id['clients-phone']), '\n');
+                        $search_arr = array(",", "<br>", "<br />", "<br/>");
+                        $clients_phone = explode(';', str_replace($search_arr, ";", $tmp));
+                        include_once AS_ROOT .'libs/api_func.php'; 
+                        if(requestMultipleCallBackHunter($clients_phone, '78127751836', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MDgwOTcyMTAsInBybiI6IjE3OC0xMDAxIiwic3ViIjoiMTc4LTEwMDEiLCJpc3MiOiJodHRwOi8vdnRlbGwucnUiLCJpYXQiOjE0NzY1NjEyMTAsInNjb3BlIjpbImNhbGxzOmluaXRpYXRlIiwiY2FsbHM6Z2V0Iiwidm9pY2Vub3RpZmljYXRpb246aW5pdGlhdGUiXX0.ZVw8y5qgbRnII9v4wwYPn2DNedrQgeRYdo0Q2ilipwg')){
+                           $result = "<div class='c-font-24 c-font-sbold c-center'>Совершается набор номеров!</div>
+                           <p class='c-center'>После совершения вызова, вы можете закрыть диалоговое окно и продолжить работу с формой</p>";
+                        }
+                        else{
+                            $result = "<div class='c-font-24 c-font-sbold c-center'>Произошла ошибка!</div>
+                            <p class='c-center'>В процессе работы произошла ошибка. Обратитесь в службу технической поддержки</p>";
+                        }
+                        $dialog_msg="
+                            <div id='dialog_form'>
+                                <div class='dialog_header'>
+                                    ".$result."
+                                </div>
+                            </div>
+                        ";
+                        $objResponse->assign("modal_content_replace","innerHTML", $dialog_msg);
+                        $objResponse->script("$('#call-back-form').modal()");
+                    }
+                    else{
+                        $all_errors = "Вы не указали номера телефонов для дозвона";
+                    }
+                }
+                else{
+                    $all_errors = "Не верно указан пароль";
+                }                
+            break; 
+            case 'callback':    
+                $verification_code = $Id['verification_code'];
+                if(md5($verification_code."solt") == 'd58cba4205874b3698bda842e6c49761'){
+                    if(!empty($Id['client-phone']) && !empty($Id['operator-phone'])){                      
+                       
+                        include_once AS_ROOT .'libs/api_func.php'; 
+                        if(requestMultipleCallBackHunter($Id['client-phone'], $Id['operator-phone'], 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MDgwOTcyMTAsInBybiI6IjE3OC0xMDAxIiwic3ViIjoiMTc4LTEwMDEiLCJpc3MiOiJodHRwOi8vdnRlbGwucnUiLCJpYXQiOjE0NzY1NjEyMTAsInNjb3BlIjpbImNhbGxzOmluaXRpYXRlIiwiY2FsbHM6Z2V0Iiwidm9pY2Vub3RpZmljYXRpb246aW5pdGlhdGUiXX0.ZVw8y5qgbRnII9v4wwYPn2DNedrQgeRYdo0Q2ilipwg')){
+                           $result = "<div class='c-font-24 c-font-sbold c-center'>Совершается набор номеров!</div>
+                           <p class='c-center'>После совершения вызова, вы можете закрыть диалоговое окно и продолжить работу с формой</p>";
+                        }
+                        else{
+                            $result = "<div class='c-font-24 c-font-sbold c-center'>Произошла ошибка!</div>
+                            <p class='c-center'>В процессе работы произошла ошибка. Обратитесь в службу технической поддержки</p>";
+                        }
+                        $dialog_msg="
+                            <div id='dialog_form'>
+                                <div class='dialog_header'>
+                                    ".$result."
+                                </div>
+                            </div>
+                        ";
+                        $objResponse->assign("modal_content_replace","innerHTML", $dialog_msg);
+                        $objResponse->script("$('#call-back-form').modal()");
+                    }
+                    else{
+                        $all_errors = "Вы не указали номера телефонов для дозвона";
+                    }
+                }
+                else{
+                    $all_errors = "Не верно указан пароль";
+                }                
+            break;
+            case 'avtoinformator':    
+                $verification_code = $Id['verification_code'];
+                if(md5($verification_code."solt") == '679894571802a285bdfc307f9a4b5d83'){
+                    if(strlen(trim($Id['client-phone']))>0){ 
+                        include_once AS_ROOT .'libs/api_func.php'; 
+                        $result = requestVoiceNotifications($Id['client-phone']);
+                        /*if(){
+                           $result = "<div class='c-font-24 c-font-sbold c-center'>Совершается набор номеров!</div>
+                           <p class='c-center'>После совершения вызова, вы можете закрыть диалоговое окно и продолжить работу с формой</p>";
+                        }
+                        else{
+                            $result = "<div class='c-font-24 c-font-sbold c-center'>Произошла ошибка!</div>
+                            <p class='c-center'>В процессе работы произошла ошибка. Обратитесь в службу технической поддержки</p>";
+                        }
+                         * 
+                         */
+                        $dialog_msg="
+                            <div id='dialog_form'>
+                                <div class='dialog_header'>
+                                    ".$result."
+                                </div>
+                            </div>
+                        ";
+                        $objResponse->assign("modal_content_replace","innerHTML", $dialog_msg);
+                        $objResponse->script("$('#call-back-form').modal()");
+                    }
+                    else{
+                        $all_errors = "Вы не указали номера телефонов для дозвона";
+                    }
+                }
+                else{
+                    $all_errors = "Не верно указан пароль";
+                }                
+            break;
+            default:   
+            break;      
+        }
+    }    
+    else{
+        $all_errors="Необходимо указать номер телефона";
+    }    
+    $objResponse->assign("all-errors","innerHTML", $all_errors);
+    return $objResponse;
+}
