@@ -268,12 +268,11 @@ class Page{
         try{        
             $res =  DB::mysqliQuery(AS_DATABASE, "
                 SELECT 
-                    `id`, `url_path`, `name`, `hierarchy`, `parent_id`, `left_menu_set`, `top_menu_set`
+                    `id`, `url_path`, `name`, `hierarchy`, `parent_id`, `top_menu_set`, `left_menu_set`
                 FROM 
-                    `". AS_DBPREFIX ."content` 
+                    `". AS_DBPREFIX ."content`     
                 ORDER BY `hierarchy`
-                    " 
-                    
+                    "                     
             );        
         }
         catch (ExceptionDataBase $edb){
@@ -286,7 +285,7 @@ class Page{
                $menu_array[$row['id']]=$row;
             }            
         } 
-        self::$_menu_arr = $menu_array;
+        self::$_menu_arr = $menu_array;        
         return self::$_menu_arr;
     }
     /* 
@@ -376,11 +375,28 @@ class Page{
     * @param array $node
     * @return string 
     */ 
-    static public function  getTplMenuItem($node){        
+    static public function  getTplMenuItem($node){
         $menu_item = '<li>
-                <a href="/'.$node['url_path'].'" title="'. $node['name'] .'">'. 
-                $node['name'].'</a>
+                <a href="/'.$node['url_path'].'" title="'. $node['name'] .'" class="dropdown">'.$node['name'].'</a>
+                '.self::getTplMenuItemDropdawn($node).'
                 </li>';
+        return $menu_item;
+    }
+    /* 
+    * Функция получения html шаблона выпадающего элемента меню
+    * Function get tpl jf item menu  
+    * @param array $node
+    * @return string 
+    */ 
+    static public function  getTplMenuItemDropdawn($node){
+        $menu_item ='';
+        if(isset($node['childs'])){
+            $menu_item = '<ul class="dropdownmenu">';
+            foreach ($node['childs'] as $key => $value) {
+                $menu_item.= '<a href="/'.$value['url_path'].'" title="'. $value['name'] .'">'.$value['name'].'</a>';
+            }
+            $menu_item.= '</ul>';
+        }
         return $menu_item;
     }
     
@@ -410,7 +426,7 @@ class Page{
     public function getLeftMenu(){
         if(empty(self::$_menu_tree))            self::getMenuTree ();
         $header_menu = '<ul>';
-        foreach(self::$_menu_tree as $node){
+        foreach(self::$_menu_tree as $node){            
             if($node['left_menu_set']==1){
 		$header_menu .= self::getTplMenuItem($node);
             }
