@@ -5,13 +5,13 @@
     </section>
     <section class="shop">                        
         <section id="goods" class="product-card">
-            <h1><? echo $PRODUCT['name']; ?></h1>
+            <h1><? echo htmlspecialchars_decode($PRODUCT['name']); ?></h1>
             <section class="product">
                 <div class="product-img"><? echo $img_block; ?></div>
                 <div class="product-description">                                    
-                    <p class="product-characteristic"><? echo $PRODUCT['characteristic']; ?></p>
+                    <p class="product-characteristic"><? echo htmlspecialchars_decode($PRODUCT['characteristic']); ?></p>
                     <p class="product-manufacturer">производитель: <a href="#">ПИК-99</a></p>
-                    <p class="product-announcement"><? echo $PRODUCT['announce']; ?></p>
+                    <p class="product-announcement"><? echo htmlspecialchars_decode($PRODUCT['announce']); ?></p>
                     <? echo $vendor_code_block; ?>
 
                     <div class="grid-row product-order"> 
