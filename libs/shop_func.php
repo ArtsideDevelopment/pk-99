@@ -74,9 +74,9 @@ function getCategoriesProducts($category_id=0){
                     <div class="product-img"><img alt="'.$row['name'].'" src="'.AS_PRODUCT_IMG_PATH."/".$row['thumb_img'].'"/></div>
                     <div class="product-description">
                         <a href="/'.$row['url_path'].'" class="product-name">'.$row['name'].'</a>
-                        <p class="product-characteristic">'.$row['characteristic'].'</p>
+                        <p class="product-characteristic">'.htmlspecialchars_decode($row['characteristic']).'</p>
                         <p class="product-manufacturer">производитель: <a href="#">ПИК-99</a></p>
-                        <p class="product-announcement">'.$row['announce'].'</p>
+                        <p class="product-announcement">'.htmlspecialchars_decode($row['announce']).'</p>
                         <a class="product-link-announcement" href="/'.$row['url_path'].'">подробнее>></a>
                     </div>
                     <div class="product-price">
