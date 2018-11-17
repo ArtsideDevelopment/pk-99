@@ -11,4 +11,5 @@
             <? echo $categories_products; ?>
         </section>
     </section>
+    <? echo $content_block_bottom; ?>
 </div>

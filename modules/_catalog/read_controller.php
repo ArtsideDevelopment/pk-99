@@ -30,4 +30,5 @@
         $categories_block = getCategoriesBlock($category_id);
         $categories_products = getCategoriesProducts($category_id);
         $content_block = getTextBlock($CATALOG['content']);
+        $content_block_bottom = getTextBlock($CATALOG['content_bottom']);
     }
