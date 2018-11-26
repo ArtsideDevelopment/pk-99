@@ -71,7 +71,7 @@ function getCategoriesProducts($category_id=0){
         while($row = $res->fetch_assoc()){
             $products_block.='
                 <section class="product">
-                    <div class="product-img"><img alt="'.$row['name'].'" src="'.AS_PRODUCT_IMG_PATH."/".$row['thumb_img'].'"/></div>
+                    <div class="product-img"><img alt="'.$row['name'].'" src="'.AS_IMG_PATH."/".$row['thumb_img'].'"/></div>
                     <div class="product-description">
                         <a href="/'.$row['url_path'].'" class="product-name">'.$row['name'].'</a>
                         <p class="product-characteristic">'.htmlspecialchars_decode($row['characteristic']).'</p>
@@ -158,7 +158,7 @@ function getProductImgBlock($img="", $product_name){
     $img_block='';
     if(strlen(trim($img))>0){
         $img_block='
-            <img alt="'.$product_name.'" src="'.trim(AS_PRODUCT_IMG_PATH,'/').'/'.trim($img,'/').'"/>
+            <img alt="'.$product_name.'" src="'.trim(AS_IMG_PATH,'/').'/'.trim($img,'/').'"/>
         ';
     }      
     return $img_block;
@@ -187,7 +187,7 @@ function getProductLinkBlock($button_link_show_set=0, $button_link_text, $button
 function getTextBlock($text){           
     $text_block='';
     if(strlen(trim($text))>0 ){
-        $text_block=str_replace('/uploads', AS_PRODUCT_IMG_PATH.'/uploads', htmlspecialchars_decode($text));
+        $text_block=str_replace('/uploads', AS_IMG_PATH.'/uploads', htmlspecialchars_decode($text));
         
         //$text_block = htmlspecialchars_decode($text);
     }      

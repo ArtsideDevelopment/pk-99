@@ -94,7 +94,7 @@ function getCartList($sid){
           $i++;
           $cart_list.='
                 <tr>
-                    <td><img src="'.AS_PRODUCT_IMG_PATH.'/'.$row['thumb_img'].'"></td>
+                    <td><img src="'.AS_IMG_PATH.'/'.$row['thumb_img'].'"></td>
                     <td>'.$row['name'].'</td>
                     <td>'.$row['cost'].'</td>
                     <td>'.$row['amount'].'</td>
@@ -163,7 +163,7 @@ function getCartGoodsBlock($sid){
           $i++;
           $cart_goods.='
                 <tr>
-                    <td valign="top"><img src="'.AS_PRODUCT_IMG_PATH.'/'.$row['thumb_img'].'"></td>
+                    <td valign="top"><img src="'.AS_IMG_PATH.'/'.$row['thumb_img'].'"></td>
                     <td valign="top">
                         <p>'.$row['name'].'<a href="javascript:void(null);" onclick="xajax_Delete_Cart_Product(\'sid='.$sid.'&cart_id='.$row['id'].'&block=goods_block\'); return false;" class="cart__goods-del">x</a></p>
                         <span class="cart__goods-amount">'.$row['amount'].' шт.</span>

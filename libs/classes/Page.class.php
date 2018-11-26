@@ -166,7 +166,7 @@ class Page{
     * @return string 
     */ 
     public function getContent(){
-        return self::output_decode(self::$_content);
+        return str_replace('/uploads', AS_IMG_PATH.'/uploads', self::output_decode(self::$_content));
     }  
     /** 
     * Функция получает html контетнта страницы

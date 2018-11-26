@@ -70,10 +70,10 @@ if(!defined('AS_KEY'))
     define('AS_SYSTEM_NAME', 'CRM ArtSide'); 
 
 /** 
-* Establishes a system product img path
-* Устанавливает путь к изображениям товара
+* Establishes a system img path
+* Устанавливает путь к изображениям 
 */  
-    define('AS_PRODUCT_IMG_PATH', 'http://crm.pk-99.u0096264.plsk.regruhosting.ru'); 
+    define('AS_IMG_PATH', 'http://crm.pk-99.u0096264.plsk.regruhosting.ru'); 
     
 /** 
 * Establishes a system categories img path
